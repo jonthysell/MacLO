@@ -1,0 +1,4 @@
+* text=auto
+
+*.c text eol=LF
+*.h text eol=LF
