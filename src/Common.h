@@ -16,6 +16,4 @@
 #define bitToggle(value, bit) ((value) ^= (1UL << (bit)))
 #define bitWrite(value, bit, bitValue) ((bitBalue) ? bitSet(value, bit) : bitClear(value, bit))
 
-extern WindowPtr MainWindow;
-
 #endif

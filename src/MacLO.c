@@ -1,36 +1,42 @@
 // Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
-#include "Common.h"
+#include "MacCommon.h"
+#include "MacLO.h"
 
-void InitToolbox()
+void InitToolBox()
 {
     InitGraf(&thePort);
     InitFonts();
     InitWindows();
     InitMenus();
     TEInit();
-    InitDialogs(0L);
+    InitDialogs(nil);
     FlushEvents(everyEvent, 0);
     InitCursor();
 }
 
 void InitMainWindow()
 {
-    MainWindow = GetNewWindow(128, 0L, (WindowPtr)-1L);
-    SetPort(MainWindow);
+    WindowPtr window;
+    
+    window = GetNewWindow(kBaseResID, nil, kMoveToFront);
+    
+    if (window == nil)
+    {
+        SysBeep(0);
+        ExitToShell();
+    }
+    
+    ShowWindow(window);
+    SetPort(window);
+    
     MoveTo(30, 50);
     DrawString("\pHello MacLO");
 }
 
-void EventLoop()
+void ProcessEvents()
 {
     while (!Button()) { }
 }
 
-void main(void)
-{
-    InitToolbox();
-    InitMainWindow();
-    EventLoop();
-}
