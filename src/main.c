@@ -5,7 +5,7 @@
 
 void main(void)
 {
-    InitToolBox();
-    InitMainWindow();
-    ProcessEvents();
+    MacLO_InitToolBox();
+    MacLO_InitWindows();
+    MacLO_MainLoop();
 }

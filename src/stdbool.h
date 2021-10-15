@@ -4,10 +4,6 @@
 #ifndef STDBOOL_H
 #define STDBOOL_H
 
-#ifndef true
-typedef char bool;
-#define true 1
-#define false 0
-#endif
+typedef Boolean bool;
 
 #endif

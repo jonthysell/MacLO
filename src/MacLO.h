@@ -4,8 +4,8 @@
 #ifndef MACLO_H
 #define MACLO_H
 
-void InitToolBox();
-void InitMainWindow();
-void ProcessEvents();
+void MacLO_InitToolBox();
+void MacLO_InitWindows();
+void MacLO_MainLoop();
 
 #endif

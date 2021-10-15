@@ -1,10 +1,12 @@
 // Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
-#include "MacCommon.h"
+#include "GameWindow.h"
 #include "MacLO.h"
 
-void InitToolBox()
+GameWindow gGameWindow;
+
+void MacLO_InitToolBox()
 {
     InitGraf(&thePort);
     InitFonts();
@@ -16,26 +18,12 @@ void InitToolBox()
     InitCursor();
 }
 
-void InitMainWindow()
+void MacLO_InitWindows()
 {
-    WindowPtr window;
-    
-    window = GetNewWindow(kBaseResID, nil, kMoveToFront);
-    
-    if (window == nil)
-    {
-        SysBeep(0);
-        ExitToShell();
-    }
-    
-    ShowWindow(window);
-    SetPort(window);
-    
-    MoveTo(30, 50);
-    DrawString("\pHello MacLO");
+    GameWindow_Init(&gGameWindow);
 }
 
-void ProcessEvents()
+void MacLO_MainLoop()
 {
     while (!Button()) { }
 }
