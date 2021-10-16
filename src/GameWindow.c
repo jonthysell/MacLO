@@ -3,27 +3,34 @@
 
 #include "GameWindow.h"
 
-void GameWindow_Init(GameWindow *gameWindow)
+void GameWindow_Init(GameWindow *pGameWindow)
 {
-    if (gameWindow->Window != nil)
+    if (pGameWindow->Window != nil)
     {
         ShowError("\pGameWindow already initialized!", false);
     }
     
-    gameWindow->Window = GetNewWindow(kBaseResID, nil, kMoveToFront);
+    pGameWindow->Window = GetNewWindow(BaseResID, nil, MoveToFront);
     
-    if (gameWindow->Window == nil)
+    if (pGameWindow->Window == nil)
     {
-        ShowError("\pGameWindow resource WIND kBaseResID missing!", true);
+        ShowError("\pGameWindow resource WIND BaseResID missing!", true);
     }
     
-    CenterWindow(gameWindow->Window);
+    GameEngine_LoadLevel(&(pGameWindow->Engine), 0, false);
     
-    ShowWindow(gameWindow->Window);
-    SetPort(gameWindow->Window);
+    CenterWindow(pGameWindow->Window);
+}
+
+void GameWindow_Draw(GameWindow *pGameWindow)
+{
+    SetPort(pGameWindow->Window);
     
     MoveTo(10, 20);
     DrawString("\pHello MacLO");
 }
 
-
+void GameWindow_Show(GameWindow *pGameWindow)
+{
+    ShowWindow(pGameWindow->Window);
+}

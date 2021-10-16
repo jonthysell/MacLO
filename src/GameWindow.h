@@ -5,12 +5,16 @@
 #define GAMEWINDOW_H
 
 #include "MacCommon.h"
+#include "GameEngine.h"
 
 typedef struct GameWindow
 {
-	WindowPtr Window;
+    WindowPtr Window;
+    GameEngine Engine;
 } GameWindow;
 
-void GameWindow_Init(GameWindow *gameWindow);
+void GameWindow_Init(GameWindow *pGameWindow);
+void GameWindow_Draw(GameWindow *pGameWindow);
+void GameWindow_Show(GameWindow *pGameWindow);
 
 #endif

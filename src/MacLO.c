@@ -4,10 +4,33 @@
 #include "GameWindow.h"
 #include "MacLO.h"
 
-GameWindow gGameWindow;
+#define AppleMenuResID     BaseResID
+#define AboutMenuItemID    1
 
-void MacLO_InitToolBox()
+#define GameMenuResID      BaseResID+1
+#define QuitMenuItemID     1
+
+#define AboutDialogResID   BaseResID
+#define AboutDialogOKID    1
+
+GameWindow gGameWindow;
+Boolean gExitApp;
+
+void MacLO_HandleUpdate(const EventRecord *pEvent);
+void MacLO_HandleMouseDown(const EventRecord *pEvent);
+
+void MacLO_HandleMenuChoice(const long menuChoice);
+void MacLO_HandleAppleMenuChoice(const short item);
+
+void MacLO_ShowAboutDialog();
+void MacLO_LaunchAppleMenuItem(const short item);
+
+void MacLO_HandleGameMenuChoice(const short item);
+
+void MacLO_ToolBoxInit()
 {
+    MaxApplZone();
+    
     InitGraf(&thePort);
     InitFonts();
     InitWindows();
@@ -18,13 +41,169 @@ void MacLO_InitToolBox()
     InitCursor();
 }
 
-void MacLO_InitWindows()
+void MacLO_AppInit()
 {
+    Handle menuBar;
+    MenuHandle appleMenu;
+    
+    // Add the menu bar
+    menuBar = GetNewMBar(BaseResID);
+    SetMenuBar(menuBar);
+    
+    // Populate the apple menu
+    appleMenu = GetMHandle(AppleMenuResID);
+    AddResMenu(appleMenu, 'DRVR');
+    
+    DrawMenuBar();
+    
+    // Setup the game window
     GameWindow_Init(&gGameWindow);
+    GameWindow_Draw(&gGameWindow);
+    GameWindow_Show(&gGameWindow);
 }
 
 void MacLO_MainLoop()
 {
-    while (!Button()) { }
+    EventRecord event;
+    char cmdChar;
+    
+    while (!gExitApp)
+    {
+        if (WaitNextEvent(everyEvent, &event, LONG_MAX, nil))
+        {
+            switch (event.what)
+            {
+                case updateEvt:
+                    MacLO_HandleUpdate(&event);
+                    break;
+                case mouseDown:
+                    MacLO_HandleMouseDown(&event);
+                    break;
+                case keyDown:
+                case autoKey:
+                    // Translate command key combos to menu items
+                    cmdChar = event.message & charCodeMask;
+                    if ((event.modifiers & cmdKey) != 0)
+                    {
+                        MacLO_HandleMenuChoice(MenuKey(cmdChar));
+                    }
+                    break;
+            }
+        }
+    }
 }
 
+void MacLO_HandleUpdate(const EventRecord *pEvent)
+{
+    WindowPtr window;
+    
+    window = (WindowPtr)pEvent->message;
+    
+    BeginUpdate(window);
+    
+    if (window == gGameWindow.Window)
+    {
+        GameWindow_Draw(&gGameWindow);
+    }
+    
+    EndUpdate(window);
+}
+
+void MacLO_HandleMouseDown(const EventRecord *pEvent)
+{
+    WindowPtr window;
+    long windowPart;
+    long menuChoice;
+    
+    windowPart = FindWindow(pEvent->where, &window);
+    
+    switch (windowPart)
+    {
+        case inMenuBar:
+            menuChoice = MenuSelect(pEvent->where);
+            MacLO_HandleMenuChoice(menuChoice);
+        case inSysWindow:
+            SystemClick(pEvent, window);
+            break;
+        case inDrag:
+            DragWindow(window, pEvent->where, &((*GetGrayRgn())->rgnBBox));
+            break;
+    }
+}
+
+void MacLO_HandleMenuChoice(const long menuChoice)
+{
+    short menu;
+    short item;
+    
+    if (menuChoice != 0)
+    {
+        menu = HiWord(menuChoice);
+        item = LoWord(menuChoice);
+        
+        switch (menu)
+        {
+            case AppleMenuResID:
+                MacLO_HandleAppleMenuChoice(item);
+                break;
+            case GameMenuResID:
+                MacLO_HandleGameMenuChoice(item);
+                break;
+        }
+        
+        HiliteMenu(0);
+    }
+}
+
+void MacLO_HandleAppleMenuChoice(const short item)
+{
+    MenuHandle appleMenu;
+    Str255 accName;
+    short accNumber;
+    
+    switch (item)
+    {
+        case AboutMenuItemID:
+            MacLO_ShowAboutDialog();
+            break;
+        default:
+            MacLO_LaunchAppleMenuItem(item);
+            break;
+    }
+}
+
+void MacLO_ShowAboutDialog()
+{
+    DialogPtr dialog;
+    int itemHit;
+    
+    dialog = GetNewDialog(AboutDialogResID, nil, MoveToFront);
+    
+    SetPort(dialog);
+    ShowWindow(dialog);
+    
+    ModalDialog(nil, &itemHit);
+    
+    DisposDialog(dialog);
+}
+
+void MacLO_LaunchAppleMenuItem(const short item)
+{
+    MenuHandle appleMenu;
+    Str255 accName;
+    
+    appleMenu = GetMHandle(AppleMenuResID);
+    GetItem(appleMenu, item, accName);
+    OpenDeskAcc(accName);
+    
+}
+
+void MacLO_HandleGameMenuChoice(const short item)
+{
+    switch (item)
+    {
+        case QuitMenuItemID:
+            gExitApp = true;
+            break;
+    }
+}

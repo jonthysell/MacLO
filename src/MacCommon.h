@@ -4,13 +4,13 @@
 #ifndef MACCOMMON_H
 #define MACCOMMON_H
 
-#define kBaseResID       128
-#define kMoveToFront     (WindowPtr)-1L
+#define BaseResID       128
+#define MoveToFront     (WindowPtr)-1L
 
-#define kEmptyString     "\p"
-#define kNilFilterProc   nil
+#define EmptyString     "\p"
+#define NilFilterProc   nil
 
-#define kErrorAlertID    kBaseResID
+#define ErrorAlertResID BaseResID
 
 void CenterWindow(WindowPtr window);
 Boolean IsCompactDisplay();

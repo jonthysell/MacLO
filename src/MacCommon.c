@@ -5,19 +5,13 @@
 
 void CenterWindow(WindowPtr window)
 {
-    
-}
-
-Boolean IsCompactDisplay()
-{
-    return screenBits.bounds.right == 512
-        && screenBits.bounds.bottom == 342;
+    // TODO
 }
 
 void ShowError(Str255 message, Boolean isFatal)
 {
-    ParamText(message, kEmptyString, kEmptyString, kEmptyString);
-    StopAlert(kErrorAlertID, kNilFilterProc);
+    ParamText(message, EmptyString, EmptyString, EmptyString);
+    StopAlert(ErrorAlertResID, NilFilterProc);
     
     if (isFatal)
     {
