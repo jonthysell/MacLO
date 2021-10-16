@@ -180,6 +180,9 @@ void MacLO_ShowAboutDialog()
     dialog = GetNewDialog(AboutDialogResID, nil, MoveToFront);
     
     SetPort(dialog);
+    
+    SetDialogDefaultItem(dialog, AboutDialogOKID);
+    
     ShowWindow(dialog);
     
     ModalDialog(nil, &itemHit);

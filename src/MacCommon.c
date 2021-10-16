@@ -3,11 +3,6 @@
 
 #include "MacCommon.h"
 
-void CenterWindow(WindowPtr window)
-{
-    // TODO
-}
-
 void ShowError(Str255 message, Boolean isFatal)
 {
     ParamText(message, EmptyString, EmptyString, EmptyString);

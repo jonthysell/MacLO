@@ -12,8 +12,8 @@
 
 #define ErrorAlertResID BaseResID
 
-void CenterWindow(WindowPtr window);
-Boolean IsCompactDisplay();
+pascal OSErr SetDialogDefaultItem(DialogPtr theDialog, short newItem) = { 0x303C, 0x0304, 0xAA68 };
+
 void ShowError(Str255 message, Boolean isFatal);
 
 #endif

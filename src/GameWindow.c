@@ -18,8 +18,6 @@ void GameWindow_Init(GameWindow *pGameWindow)
     }
     
     GameEngine_LoadLevel(&(pGameWindow->Engine), 0, false);
-    
-    CenterWindow(pGameWindow->Window);
 }
 
 void GameWindow_Draw(GameWindow *pGameWindow)
