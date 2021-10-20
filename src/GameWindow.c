@@ -3,7 +3,9 @@
 
 #include "GameWindow.h"
 
-void GameWindow_DrawPlayfield(const GameWindow *pGameWindow);
+void GameWindow_SetLightRect(const GameWindow *pGameWindow, Rect *pRect, const int8_t c, const int8_t r);
+void GameWindow_DrawPlayfield(const GameWindow *pGameWindow, Boolean fullRefresh);
+void GameWindow_DrawHUD(const GameWindow *pGameWindow, Boolean fullRefresh);
 
 void GameWindow_Init(GameWindow *pGameWindow)
 {
@@ -20,14 +22,18 @@ void GameWindow_Init(GameWindow *pGameWindow)
     }
     
     // Setup rects
-    pGameWindow->PlayfieldRect.left = PlayfieldMargin;
     pGameWindow->PlayfieldRect.top = PlayfieldMargin;
-    pGameWindow->PlayfieldRect.right = (2 * PlayfieldMargin) + (PuzzleSize * (LightSize + LightMargin)) - LightMargin;
-    pGameWindow->PlayfieldRect.bottom = (2 * PlayfieldMargin) + (PuzzleSize * (LightSize + LightMargin)) - LightMargin;;
+    pGameWindow->PlayfieldRect.bottom = pGameWindow->Window->portRect.bottom - PlayfieldMargin;
+    pGameWindow->PlayfieldRect.left = pGameWindow->PlayfieldRect.top;
+    pGameWindow->PlayfieldRect.right = pGameWindow->PlayfieldRect.bottom;
     
+    pGameWindow->HUDRect.top = HUDMargin;
+    pGameWindow->HUDRect.bottom = pGameWindow->Window->portRect.bottom - HUDMargin;
+    pGameWindow->HUDRect.left = pGameWindow->PlayfieldRect.right + HUDMargin;
+    pGameWindow->HUDRect.right = pGameWindow->Window->portRect.right - HUDMargin;
+        
     // Load first level
     GameEngine_LoadLevel(&(pGameWindow->Engine), 0, false);
-    
 }
 
 void GameWindow_Draw(const GameWindow *pGameWindow, Boolean fullRefresh)
@@ -39,46 +45,63 @@ void GameWindow_Draw(const GameWindow *pGameWindow, Boolean fullRefresh)
     if (fullRefresh)
     {
         // Fill background
-        ForeColor(blackColor);
-        PaintRect(pContentRect);
+        FillRect(pContentRect, WindowPattern);
     }
     
-    GameWindow_DrawPlayfield(pGameWindow);
+    GameWindow_DrawPlayfield(pGameWindow, fullRefresh);
+    GameWindow_DrawHUD(pGameWindow, fullRefresh);
 }
 
-void GameWindow_DrawPlayfield(const GameWindow *pGameWindow)
+void GameWindow_SetLightRect(const GameWindow *pGameWindow, Rect *pRect, const int8_t c, const int8_t r)
+{
+    pRect->top = pGameWindow->PlayfieldRect.top + PlayfieldPadding + LightMargin + (r * (LightMargin + LightSize));
+    pRect->bottom = pRect->top + LightSize;
+    pRect->left = pGameWindow->PlayfieldRect.left + PlayfieldPadding + LightMargin + (c * (LightMargin + LightSize));
+    pRect->right = pRect->left + LightSize;
+}
+
+void GameWindow_DrawPlayfield(const GameWindow *pGameWindow, Boolean fullRefresh)
 {
     int8_t r, c;
     Rect lightRect;
     
     SetPort(pGameWindow->Window);
     
+    if (fullRefresh)
+    {
+        // Fill background
+        FillRoundRect(&(pGameWindow->PlayfieldRect), PlayfieldCornerSize, PlayfieldCornerSize, PlayfieldPattern);
+    }
+    
     // Draw lights
     for (r = 0; r < PuzzleSize; r++)
     {
-        lightRect.top = PlayfieldMargin + (r * (LightMargin + LightSize));
-        lightRect.bottom = lightRect.top + LightSize;
-        
         for (c = 0; c < PuzzleSize; c++)
         {
-            lightRect.left = PlayfieldMargin + (c * (LightMargin + LightSize));
-            lightRect.right = lightRect.left + LightSize;
+            GameWindow_SetLightRect(pGameWindow, &lightRect, c, r);
             
             if (GameEngine_GetLight(&(pGameWindow->Engine), c, r))
             {
                 // Draw ON light
-                ForeColor(whiteColor);
-                PaintRoundRect(&lightRect, LightCornerSize, LightCornerSize);
+                FillRoundRect(&lightRect, LightCornerSize, LightCornerSize, white);
             }
             else
             {
                 // Draw OFF light
-                ForeColor(blackColor);
-                PaintRoundRect(&lightRect, LightCornerSize, LightCornerSize);
-                ForeColor(whiteColor);
-                FrameRoundRect(&lightRect, LightCornerSize, LightCornerSize);
+                FillRoundRect(&lightRect, LightCornerSize, LightCornerSize, black);
             }
         }
+    }
+}
+
+void GameWindow_DrawHUD(const GameWindow *pGameWindow, Boolean fullRefresh)
+{
+    SetPort(pGameWindow->Window);
+    
+    if (fullRefresh)
+    {
+        // Fill background
+        FillRoundRect(&(pGameWindow->HUDRect), HUDCornerSize, HUDCornerSize, HUDPattern);
     }
 }
 
@@ -96,18 +119,14 @@ void GameWindow_Click(GameWindow *pGameWindow, const Point *pPosition)
     {
         for (r = 0; r < PuzzleSize; r++)
         {
-            lightRect.top = PlayfieldMargin + (r * (LightMargin + LightSize));
-            lightRect.bottom = lightRect.top + LightSize;
-        
             for (c = 0; c < PuzzleSize; c++)
             {
-                lightRect.left = PlayfieldMargin + (c * (LightMargin + LightSize));
-                lightRect.right = lightRect.left + LightSize;
+                GameWindow_SetLightRect(pGameWindow, &lightRect, c, r);
                 
                 if (PtInRect(*pPosition, &lightRect))
                 {
                     GameEngine_ToggleLights(&(pGameWindow->Engine), c, r);
-                    GameWindow_DrawPlayfield(pGameWindow);
+                    GameWindow_Draw(pGameWindow, false);
                     break;
                 }
             }

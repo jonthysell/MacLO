@@ -18,6 +18,7 @@ Boolean gExitApp;
 
 void MacLO_HandleUpdate(const EventRecord *pEvent);
 void MacLO_HandleMouseDown(const EventRecord *pEvent);
+void MacLO_HandleMouseUp(const EventRecord *pEvent);
 
 void MacLO_HandleMenuChoice(const long menuChoice);
 void MacLO_HandleAppleMenuChoice(const short item);
@@ -58,7 +59,6 @@ void MacLO_AppInit()
     
     // Setup the game window
     GameWindow_Init(&gGameWindow);
-    GameWindow_Draw(&gGameWindow, true);
     GameWindow_Show(&gGameWindow);
 }
 
@@ -78,6 +78,9 @@ void MacLO_MainLoop()
                     break;
                 case mouseDown:
                     MacLO_HandleMouseDown(&event);
+                    break;
+                case mouseUp:
+                    MacLO_HandleMouseUp(&event);
                     break;
                 case keyDown:
                 case autoKey:
@@ -130,6 +133,20 @@ void MacLO_HandleMouseDown(const EventRecord *pEvent)
         case inDrag:
             DragWindow(window, mousePosition, &((*GetGrayRgn())->rgnBBox));
             break;
+    }
+}
+
+void MacLO_HandleMouseUp(const EventRecord *pEvent)
+{
+    WindowPtr window;
+    long windowPart;
+    Point mousePosition;
+    
+    windowPart = FindWindow(pEvent->where, &window);
+    mousePosition = pEvent->where;
+    
+    switch (windowPart)
+    {
         case inContent:
             GlobalToLocal(&mousePosition);
             GameWindow_Click(&gGameWindow, &mousePosition);

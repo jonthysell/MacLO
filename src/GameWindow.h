@@ -7,16 +7,26 @@
 #include "MacCommon.h"
 #include "GameEngine.h"
 
-#define PlayfieldMargin 5
-#define LightMargin     10
-#define LightSize       50
-#define LightCornerSize 10
+#define WindowPattern       black
+
+#define PlayfieldMargin     4
+#define PlayfieldPadding    2
+#define PlayfieldCornerSize 12
+#define LightMargin         6
+#define LightSize           50
+#define LightCornerSize     8
+#define PlayfieldPattern    ltGray
+
+#define HUDMargin     PlayfieldMargin
+#define HUDCornerSize PlayfieldCornerSize
+#define HUDPattern    PlayfieldPattern
 
 typedef struct GameWindow
 {
     WindowPtr  Window;
     GameEngine Engine;
     Rect       PlayfieldRect;
+    Rect       HUDRect;
 } GameWindow;
 
 void GameWindow_Init(GameWindow *pGameWindow);
