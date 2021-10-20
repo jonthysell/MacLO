@@ -58,7 +58,7 @@ void MacLO_AppInit()
     
     // Setup the game window
     GameWindow_Init(&gGameWindow);
-    GameWindow_Draw(&gGameWindow);
+    GameWindow_Draw(&gGameWindow, true);
     GameWindow_Show(&gGameWindow);
 }
 
@@ -103,7 +103,7 @@ void MacLO_HandleUpdate(const EventRecord *pEvent)
     
     if (window == gGameWindow.Window)
     {
-        GameWindow_Draw(&gGameWindow);
+        GameWindow_Draw(&gGameWindow, true);
     }
     
     EndUpdate(window);
@@ -114,19 +114,25 @@ void MacLO_HandleMouseDown(const EventRecord *pEvent)
     WindowPtr window;
     long windowPart;
     long menuChoice;
+    Point mousePosition;
     
     windowPart = FindWindow(pEvent->where, &window);
+    mousePosition = pEvent->where;
     
     switch (windowPart)
     {
         case inMenuBar:
-            menuChoice = MenuSelect(pEvent->where);
+            menuChoice = MenuSelect(mousePosition);
             MacLO_HandleMenuChoice(menuChoice);
         case inSysWindow:
             SystemClick(pEvent, window);
             break;
         case inDrag:
-            DragWindow(window, pEvent->where, &((*GetGrayRgn())->rgnBBox));
+            DragWindow(window, mousePosition, &((*GetGrayRgn())->rgnBBox));
+            break;
+        case inContent:
+            GlobalToLocal(&mousePosition);
+            GameWindow_Click(&gGameWindow, &mousePosition);
             break;
     }
 }
