@@ -4,8 +4,12 @@
 #include "GameWindow.h"
 
 void GameWindow_SetLightRect(const GameWindow *pGameWindow, Rect *pRect, const int8_t c, const int8_t r);
-void GameWindow_DrawPlayfield(const GameWindow *pGameWindow, Boolean fullRefresh);
-void GameWindow_DrawHUD(const GameWindow *pGameWindow, Boolean fullRefresh);
+
+void GameWindow_DrawPlayMode(const GameWindow *pGameWindow, bool fullRefresh);
+void GameWindow_DrawLevelCompleteMode(const GameWindow *pGameWindow, bool fullRefresh);
+
+void GameWindow_ClickPlayMode(GameWindow *pGameWindow, const Point *pPosition);
+void GameWindow_ClickLevelCompleteMode(GameWindow *pGameWindow, const Point *pPosition);
 
 void GameWindow_Init(GameWindow *pGameWindow)
 {
@@ -20,6 +24,8 @@ void GameWindow_Init(GameWindow *pGameWindow)
     {
         ShowError("\pGameWindow resource WIND BaseResID missing!", true);
     }
+    
+    pGameWindow->GameMode = Play;
     
     // Setup rects
     pGameWindow->PlayfieldRect.top = PlayfieldMargin;
@@ -36,7 +42,7 @@ void GameWindow_Init(GameWindow *pGameWindow)
     GameEngine_LoadLevel(&(pGameWindow->Engine), 0, false);
 }
 
-void GameWindow_Draw(const GameWindow *pGameWindow, Boolean fullRefresh)
+void GameWindow_Draw(const GameWindow *pGameWindow, bool fullRefresh)
 {
     const Rect *pContentRect = &(pGameWindow->Window->portRect);
     
@@ -48,8 +54,15 @@ void GameWindow_Draw(const GameWindow *pGameWindow, Boolean fullRefresh)
         FillRect(pContentRect, WindowPattern);
     }
     
-    GameWindow_DrawPlayfield(pGameWindow, fullRefresh);
-    GameWindow_DrawHUD(pGameWindow, fullRefresh);
+    switch (pGameWindow->GameMode)
+    {
+        case Play:
+            GameWindow_DrawPlayMode(pGameWindow, fullRefresh);
+            break;
+        case LevelComplete:
+            GameWindow_DrawLevelCompleteMode(pGameWindow, fullRefresh);
+            break;
+    }
 }
 
 void GameWindow_SetLightRect(const GameWindow *pGameWindow, Rect *pRect, const int8_t c, const int8_t r)
@@ -60,18 +73,22 @@ void GameWindow_SetLightRect(const GameWindow *pGameWindow, Rect *pRect, const i
     pRect->right = pRect->left + LightSize;
 }
 
-void GameWindow_DrawPlayfield(const GameWindow *pGameWindow, Boolean fullRefresh)
+void GameWindow_DrawPlayMode(const GameWindow *pGameWindow, bool fullRefresh)
 {
     int8_t r, c;
     Rect lightRect;
+    Str255 levelStr, parStr, movesStr;
     
     SetPort(pGameWindow->Window);
     
     if (fullRefresh)
     {
-        // Fill background
+        // Fill backgrounds
         FillRoundRect(&(pGameWindow->PlayfieldRect), PlayfieldCornerSize, PlayfieldCornerSize, PlayfieldPattern);
+        FillRoundRect(&(pGameWindow->HUDRect), HUDCornerSize, HUDCornerSize, HUDPattern);
     }
+    
+    // Draw Playfield
     
     // Draw lights
     for (r = 0; r < PuzzleSize; r++)
@@ -92,17 +109,42 @@ void GameWindow_DrawPlayfield(const GameWindow *pGameWindow, Boolean fullRefresh
             }
         }
     }
+    
+    // Draw HUD
+    
+    ForeColor(blackColor);
+    TextFace(bold + outline);
+    
+    // Draw Level
+    MoveTo(pGameWindow->HUDRect.left + 10, pGameWindow->HUDRect.top + 20);
+    DrawString("\pLevel: ");
+    NumToString((long)(pGameWindow->Engine.Level), &levelStr);
+    DrawString(levelStr);
+    
+    // Draw Par
+    MoveTo(pGameWindow->HUDRect.left + 10, pGameWindow->HUDRect.top + 40);
+    DrawString("\pPar: ");
+    NumToString((long)(pGameWindow->Engine.Par), &parStr);
+    DrawString(parStr);
+    
+    // Draw Moves
+    MoveTo(pGameWindow->HUDRect.left + 10, pGameWindow->HUDRect.top + 60);
+    DrawString("\pMoves: ");
+    NumToString((long)(pGameWindow->Engine.Moves), &movesStr);
+    DrawString(movesStr);
 }
 
-void GameWindow_DrawHUD(const GameWindow *pGameWindow, Boolean fullRefresh)
+void GameWindow_DrawLevelCompleteMode(const GameWindow *pGameWindow, bool fullRefresh)
 {
     SetPort(pGameWindow->Window);
     
+    // TODO: Proper level complete
     if (fullRefresh)
     {
-        // Fill background
-        FillRoundRect(&(pGameWindow->HUDRect), HUDCornerSize, HUDCornerSize, HUDPattern);
     }
+    
+    MoveTo(100, 100);
+    DrawString("\pLevel Complete! Click to continue.");
 }
 
 void GameWindow_Show(const GameWindow *pGameWindow)
@@ -112,11 +154,25 @@ void GameWindow_Show(const GameWindow *pGameWindow)
 
 void GameWindow_Click(GameWindow *pGameWindow, const Point *pPosition)
 {
+    switch (pGameWindow->GameMode)
+    {
+        case Play:
+            GameWindow_ClickPlayMode(pGameWindow, pPosition);
+            break;
+        case LevelComplete:
+            GameWindow_ClickLevelCompleteMode(pGameWindow, pPosition);
+            break;
+    }
+}
+
+void GameWindow_ClickPlayMode(GameWindow *pGameWindow, const Point *pPosition)
+{
     int8_t r, c;
     Rect lightRect;
     
     if (PtInRect(*pPosition, &(pGameWindow->PlayfieldRect)))
     {
+        // Click within Playfield
         for (r = 0; r < PuzzleSize; r++)
         {
             for (c = 0; c < PuzzleSize; c++)
@@ -131,6 +187,24 @@ void GameWindow_Click(GameWindow *pGameWindow, const Point *pPosition)
                 }
             }
         }
-       
+        
+        if (GameEngine_IsCompleted(&(pGameWindow->Engine)))
+        {
+            // Level was completed in the last click
+            pGameWindow->GameMode = LevelComplete;
+            GameWindow_Draw(pGameWindow, true);
+        }
     }
+    else if (PtInRect(*pPosition, &(pGameWindow->HUDRect)))
+    {
+        // Click within HUD
+    }
+}
+
+void GameWindow_ClickLevelCompleteMode(GameWindow *pGameWindow, const Point *pPosition)
+{
+    // TODO: Proper click handling
+    GameEngine_LoadLevel(&(pGameWindow->Engine), pGameWindow->Engine.Level + 1, pGameWindow->Engine.SetB);
+    pGameWindow->GameMode = Play;
+    GameWindow_Draw(pGameWindow, true);
 }

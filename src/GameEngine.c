@@ -17,6 +17,7 @@ void GameEngine_ToggleSingleLight(GameEngine *pGameEngine, const int8_t x, const
 void GameEngine_LoadLevel(GameEngine *pGameEngine, const int8_t level, const bool setB)
 {
     pGameEngine->Level = Levels_BoundLevel(level);
+    pGameEngine->SetB = setB;
     pGameEngine->Lights = Levels_GetLightsForLevel(pGameEngine->Level, setB);
     pGameEngine->Par = Levels_GetParForLevel(pGameEngine->Level);
     pGameEngine->Moves = 0;

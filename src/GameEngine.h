@@ -17,6 +17,7 @@ extern const uint16_t PerfectScore;
 typedef struct GameEngine
 {
     int8_t   Level;
+    bool     SetB;
     uint32_t Lights;
     uint16_t Par;
     uint16_t Moves;

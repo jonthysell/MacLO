@@ -21,17 +21,25 @@
 #define HUDCornerSize PlayfieldCornerSize
 #define HUDPattern    PlayfieldPattern
 
+typedef enum GameMode
+{
+    Play,
+    LevelComplete,
+    GameComplete
+} GameMode;
+
 typedef struct GameWindow
 {
     WindowPtr  Window;
     GameEngine Engine;
+    GameMode   GameMode;
     Rect       PlayfieldRect;
     Rect       HUDRect;
 } GameWindow;
 
 void GameWindow_Init(GameWindow *pGameWindow);
 
-void GameWindow_Draw(const GameWindow *pGameWindow, Boolean fullRefresh);
+void GameWindow_Draw(const GameWindow *pGameWindow, bool fullRefresh);
 void GameWindow_Show(const GameWindow *pGameWindow);
 
 void GameWindow_Click(GameWindow *pGameWindow, const Point *pPosition);
