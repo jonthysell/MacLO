@@ -5,9 +5,11 @@
 
 void GameWindow_SetLightRect(const GameWindow *pGameWindow, Rect *pRect, const int8_t c, const int8_t r);
 
+void GameWindow_DrawTitleMode(const GameWindow *pGameWindow, bool fullRefresh);
 void GameWindow_DrawPlayMode(const GameWindow *pGameWindow, bool fullRefresh);
 void GameWindow_DrawLevelCompleteMode(const GameWindow *pGameWindow, bool fullRefresh);
 
+void GameWindow_ClickTitleMode(GameWindow *pGameWindow, const Point *pPosition);
 void GameWindow_ClickPlayMode(GameWindow *pGameWindow, const Point *pPosition);
 void GameWindow_ClickLevelCompleteMode(GameWindow *pGameWindow, const Point *pPosition);
 
@@ -25,7 +27,7 @@ void GameWindow_Init(GameWindow *pGameWindow)
         ShowError("\pGameWindow resource WIND BaseResID missing!", true);
     }
     
-    pGameWindow->GameMode = Play;
+    pGameWindow->GameMode = Title;
     
     // Setup rects
     pGameWindow->PlayfieldRect.top = PlayfieldMargin;
@@ -56,6 +58,9 @@ void GameWindow_Draw(const GameWindow *pGameWindow, bool fullRefresh)
     
     switch (pGameWindow->GameMode)
     {
+        case Title:
+            GameWindow_DrawTitleMode(pGameWindow, fullRefresh);
+            break;
         case Play:
             GameWindow_DrawPlayMode(pGameWindow, fullRefresh);
             break;
@@ -73,11 +78,33 @@ void GameWindow_SetLightRect(const GameWindow *pGameWindow, Rect *pRect, const i
     pRect->right = pRect->left + LightSize;
 }
 
+void GameWindow_DrawTitleMode(const GameWindow *pGameWindow, bool fullRefresh)
+{
+    SetPort(pGameWindow->Window);
+    
+    // TODO: Proper title
+    if (fullRefresh)
+    {
+    }
+    
+    ForeColor(blackColor);
+    TextFace(bold + outline);
+    
+    MoveTo(100, 100);
+    DrawString("\pMacLO! Click to continue.");
+    
+    MoveTo(25, 200);
+    DrawString("\pSet A.");
+    
+    MoveTo(250, 200);
+    DrawString("\pSet B.");
+}
+
 void GameWindow_DrawPlayMode(const GameWindow *pGameWindow, bool fullRefresh)
 {
     int8_t r, c;
     Rect lightRect;
-    Str255 levelStr, parStr, movesStr;
+    Str255 levelStr, parStr, movesStr, halfStarsStr, scoreStr;
     
     SetPort(pGameWindow->Window);
     
@@ -118,8 +145,9 @@ void GameWindow_DrawPlayMode(const GameWindow *pGameWindow, bool fullRefresh)
     // Draw Level
     MoveTo(pGameWindow->HUDRect.left + 10, pGameWindow->HUDRect.top + 20);
     DrawString("\pLevel: ");
-    NumToString((long)(pGameWindow->Engine.Level), &levelStr);
+    NumToString(1L + pGameWindow->Engine.Level, &levelStr);
     DrawString(levelStr);
+    DrawString("\p/50");
     
     // Draw Par
     MoveTo(pGameWindow->HUDRect.left + 10, pGameWindow->HUDRect.top + 40);
@@ -132,10 +160,28 @@ void GameWindow_DrawPlayMode(const GameWindow *pGameWindow, bool fullRefresh)
     DrawString("\pMoves: ");
     NumToString((long)(pGameWindow->Engine.Moves), &movesStr);
     DrawString(movesStr);
+    DrawString("\p/");
+    DrawString(parStr);
+    
+    // Draw Stars
+    MoveTo(pGameWindow->HUDRect.left + 10, pGameWindow->HUDRect.top + 80);
+    DrawString("\pStars: ");
+    NumToString((long)GameEngine_GetHalfStars(&(pGameWindow->Engine)), &halfStarsStr);
+    DrawString(halfStarsStr);
+    DrawString("\p/6");
+    
+    // Draw Score
+    MoveTo(pGameWindow->HUDRect.left + 10, pGameWindow->HUDRect.top + 100);
+    DrawString("\pScore: ");
+    NumToString((long)(pGameWindow->Engine.Score), &scoreStr);
+    DrawString(scoreStr);
+    DrawString("\p/300");
 }
 
 void GameWindow_DrawLevelCompleteMode(const GameWindow *pGameWindow, bool fullRefresh)
 {
+    Str255 halfStarsStr;
+    
     SetPort(pGameWindow->Window);
     
     // TODO: Proper level complete
@@ -143,8 +189,20 @@ void GameWindow_DrawLevelCompleteMode(const GameWindow *pGameWindow, bool fullRe
     {
     }
     
-    MoveTo(100, 100);
-    DrawString("\pLevel Complete! Click to continue.");
+    MoveTo(50, 100);
+    DrawString("\pLevel complete! Click to continue.");
+    
+    MoveTo(50, 125);
+    DrawString("\pReceived ");
+    NumToString((long)GameEngine_GetHalfStars(&(pGameWindow->Engine)), &halfStarsStr);
+    DrawString(halfStarsStr);
+    DrawString("\p/6 half-stars.");
+    
+    MoveTo(25, 200);
+    DrawString("\pRetry level.");
+    
+    MoveTo(250, 200);
+    DrawString("\pNext level.");
 }
 
 void GameWindow_Show(const GameWindow *pGameWindow)
@@ -156,6 +214,9 @@ void GameWindow_Click(GameWindow *pGameWindow, const Point *pPosition)
 {
     switch (pGameWindow->GameMode)
     {
+        case Title:
+            GameWindow_ClickTitleMode(pGameWindow, pPosition);
+            break;
         case Play:
             GameWindow_ClickPlayMode(pGameWindow, pPosition);
             break;
@@ -163,6 +224,26 @@ void GameWindow_Click(GameWindow *pGameWindow, const Point *pPosition)
             GameWindow_ClickLevelCompleteMode(pGameWindow, pPosition);
             break;
     }
+}
+
+void GameWindow_ClickTitleMode(GameWindow *pGameWindow, const Point *pPosition)
+{
+    bool setB;
+    
+    // TODO: Proper click handling
+    
+    if (pPosition->h < ((pGameWindow->Window->portRect.right - pGameWindow->Window->portRect.left) / 2))
+    {
+        setB = false;
+    }
+    else
+    {
+        setB = true;
+    }
+
+    GameEngine_NewGame(&(pGameWindow->Engine), setB);
+    pGameWindow->GameMode = Play;
+    GameWindow_Draw(pGameWindow, true);
 }
 
 void GameWindow_ClickPlayMode(GameWindow *pGameWindow, const Point *pPosition)
@@ -204,7 +285,16 @@ void GameWindow_ClickPlayMode(GameWindow *pGameWindow, const Point *pPosition)
 void GameWindow_ClickLevelCompleteMode(GameWindow *pGameWindow, const Point *pPosition)
 {
     // TODO: Proper click handling
-    GameEngine_LoadLevel(&(pGameWindow->Engine), pGameWindow->Engine.Level + 1, pGameWindow->Engine.SetB);
+    
+    if (pPosition->h < ((pGameWindow->Window->portRect.right - pGameWindow->Window->portRect.left) / 2))
+    {
+        GameEngine_ResetLevel(&(pGameWindow->Engine));
+    }
+    else
+    {
+        GameEngine_NextLevel(&(pGameWindow->Engine));
+    }
+    
     pGameWindow->GameMode = Play;
     GameWindow_Draw(pGameWindow, true);
 }

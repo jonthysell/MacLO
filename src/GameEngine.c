@@ -12,7 +12,28 @@ const uint8_t MinHalfStars = 1;
 
 const uint16_t PerfectScore = 300; // LevelCount * MaxHalfStars
 
+void GameEngine_LoadLevel(GameEngine *pGameEngine, const int8_t level, const bool setB);
 void GameEngine_ToggleSingleLight(GameEngine *pGameEngine, const int8_t x, const int8_t y);
+
+void GameEngine_NewGame(GameEngine *pGameEngine, const bool setB)
+{
+    pGameEngine->Score = 0;
+    GameEngine_LoadLevel(pGameEngine, 0, setB);
+}
+
+void GameEngine_NextLevel(GameEngine *pGameEngine)
+{
+    if (GameEngine_IsCompleted(pGameEngine))
+    {
+        pGameEngine->Score += GameEngine_GetHalfStars(pGameEngine);
+        GameEngine_LoadLevel(pGameEngine, pGameEngine->Level + 1, pGameEngine->SetB);
+    }
+}
+
+void GameEngine_ResetLevel(GameEngine *pGameEngine)
+{
+    GameEngine_LoadLevel(pGameEngine, pGameEngine->Level, pGameEngine->SetB);
+}
 
 void GameEngine_LoadLevel(GameEngine *pGameEngine, const int8_t level, const bool setB)
 {

@@ -23,6 +23,7 @@
 
 typedef enum GameMode
 {
+    Title,
     Play,
     LevelComplete,
     GameComplete
