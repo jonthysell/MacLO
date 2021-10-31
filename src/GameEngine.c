@@ -37,7 +37,7 @@ void GameEngine_ResetLevel(GameEngine *pGameEngine)
 
 void GameEngine_LoadLevel(GameEngine *pGameEngine, const int8_t level, const bool setB)
 {
-    pGameEngine->Level = Levels_BoundLevel(level);
+    pGameEngine->Level = level;
     pGameEngine->SetB = setB;
     pGameEngine->Lights = Levels_GetLightsForLevel(pGameEngine->Level, setB);
     pGameEngine->Par = Levels_GetParForLevel(pGameEngine->Level);
@@ -57,6 +57,11 @@ bool GameEngine_GetLight(const GameEngine *pGameEngine, const int8_t x, const in
 bool GameEngine_IsCompleted(const GameEngine *pGameEngine)
 {
     return pGameEngine->Lights == 0;
+}
+
+bool GameEngine_IsGameOver(const GameEngine *pGameEngine)
+{
+    return pGameEngine->Level >= LevelCount;
 }
 
 uint8_t GameEngine_GetHalfStars(const GameEngine *pGameEngine)

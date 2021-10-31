@@ -9,8 +9,6 @@
 
 extern const int8_t LevelCount;
 
-int8_t Levels_BoundLevel(const int8_t level);
-
 uint32_t Levels_GetLightsForLevel(const int8_t level, const bool setB);
 
 uint16_t Levels_GetParForLevel(const int8_t level);

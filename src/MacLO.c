@@ -8,7 +8,8 @@
 #define AboutMenuItemID    1
 
 #define GameMenuResID      BaseResID+1
-#define QuitMenuItemID     1
+#define NewMenuItemID      1
+#define QuitMenuItemID     3
 
 #define AboutDialogResID   BaseResID
 #define AboutDialogOKID    1
@@ -228,6 +229,9 @@ void MacLO_HandleGameMenuChoice(const short item)
 {
     switch (item)
     {
+        case NewMenuItemID:
+            GameWindow_SetScene(&gGameWindow, Title);
+            break;
         case QuitMenuItemID:
             gExitApp = true;
             break;

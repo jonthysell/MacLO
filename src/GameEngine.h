@@ -34,6 +34,8 @@ bool GameEngine_GetLight(const GameEngine *pGameEngine, const int8_t x, const in
 
 bool GameEngine_IsCompleted(const GameEngine *pGameEngine);
 
+bool GameEngine_IsGameOver(const GameEngine *pGameEngine);
+
 uint8_t GameEngine_GetHalfStars(const GameEngine *pGameEngine);
 
 void GameEngine_ToggleLights(GameEngine *pGameEngine, const int8_t x, const int8_t y);

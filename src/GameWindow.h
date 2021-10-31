@@ -6,43 +6,25 @@
 
 #include "MacCommon.h"
 #include "GameEngine.h"
+#include "Scenes.h"
 
-#define WindowPattern       black
-
-#define PlayfieldMargin     4
-#define PlayfieldPadding    2
-#define PlayfieldCornerSize 12
-#define LightMargin         6
-#define LightSize           50
-#define LightCornerSize     8
-#define PlayfieldPattern    ltGray
-
-#define HUDMargin     PlayfieldMargin
-#define HUDCornerSize PlayfieldCornerSize
-#define HUDPattern    PlayfieldPattern
-
-typedef enum GameMode
-{
-    Title,
-    Play,
-    LevelComplete,
-    GameComplete
-} GameMode;
+#define WindowPattern black
 
 typedef struct GameWindow
 {
     WindowPtr  Window;
     GameEngine Engine;
-    GameMode   GameMode;
-    Rect       PlayfieldRect;
-    Rect       HUDRect;
+    SceneId    CurrentSceneId;
+    bool       SceneIsInitialized[NumScenes];
+    TitleScene TitleScene;
+    PlayScene  PlayScene;
 } GameWindow;
 
 void GameWindow_Init(GameWindow *pGameWindow);
-
 void GameWindow_Draw(const GameWindow *pGameWindow, bool fullRefresh);
-void GameWindow_Show(const GameWindow *pGameWindow);
-
 void GameWindow_Click(GameWindow *pGameWindow, const Point *pPosition);
+
+void GameWindow_SetScene(GameWindow *pGameWindow, const SceneId sceneId);
+void GameWindow_Show(const GameWindow *pGameWindow);
 
 #endif

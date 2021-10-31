@@ -24,19 +24,22 @@ const uint32_t Levels_LightsB[] = {
     0x1151151UL, 0x1F27C9FUL, 0x1F711DFUL, 0x04AFEA4UL, 0x1FFFFFFUL,
 };
 
-int8_t Levels_BoundLevel(const int8_t level)
-{
-    return max(level, 0) % LevelCount;
-}
-
 uint32_t Levels_GetLightsForLevel(const int8_t level, const bool setB)
 {
-    int8_t bLevel = Levels_BoundLevel(level);
-    return setB ? Levels_LightsB[bLevel] : Levels_LightsA[bLevel];
+    if (level >= 0 && level < LevelCount)
+    {
+        return setB ? Levels_LightsB[level] : Levels_LightsA[level];
+    }
+    
+    return 0;
 }
 
 uint16_t Levels_GetParForLevel(const int8_t level)
 {
-    return 6 + (Levels_BoundLevel(level) / 5);
+    if (level >= 0 && level < LevelCount)
+    {
+        return 6 + (level / 5);
+    }
+    
+    return 0;
 }
-

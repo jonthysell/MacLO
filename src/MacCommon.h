@@ -16,4 +16,8 @@ pascal OSErr SetDialogDefaultItem(DialogPtr theDialog, short newItem) = { 0x303C
 
 void ShowError(Str255 message, Boolean isFatal);
 
+void CenterRect(const Rect *pOuterRect, Rect *pInnerRect);
+void CenterRectH(const Rect *pOuterRect, Rect *pInnerRect);
+void CenterRectV(const Rect *pOuterRect, Rect *pInnerRect);
+
 #endif
