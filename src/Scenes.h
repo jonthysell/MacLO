@@ -6,7 +6,7 @@
 
 #define NumScenes 4
 
-typedef enum SceneId
+typedef enum eSceneId
 {
     Title,
     Play,
@@ -14,16 +14,25 @@ typedef enum SceneId
     GameEnd
 } SceneId;
 
-typedef struct TitleScene
+typedef struct sTitleScene
 {
-    PicHandle TitlePict;
     Rect      TitleRect;
 } TitleScene;
 
-typedef struct PlayScene
+typedef struct sPlayScene
 {
     Rect PlayfieldRect;
     Rect HUDRect;
 } PlayScene;
+
+typedef struct sLevelEndScene
+{
+    Rect temp;
+} LevelEndScene;
+
+typedef struct sGameEndScene
+{
+    Rect temp;
+} GameEndScene;
 
 #endif

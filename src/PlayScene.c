@@ -43,8 +43,6 @@ void PlayScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
     Rect lightRect;
     Str255 levelStr, parStr, movesStr, halfStarsStr, scoreStr;
     
-    SetPort(pGameWindow->Window);
-    
     if (fullRefresh)
     {
         // Fill backgrounds
@@ -89,13 +87,13 @@ void PlayScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
     // Draw Par
     MoveTo(pGameWindow->PlayScene.HUDRect.left + 10, pGameWindow->PlayScene.HUDRect.top + 40);
     DrawString("\pPar: ");
-    NumToString((long)(pGameWindow->Engine.Par), &parStr);
+    NumToString((int32_t)(pGameWindow->Engine.Par), &parStr);
     DrawString(parStr);
     
     // Draw Moves
     MoveTo(pGameWindow->PlayScene.HUDRect.left + 10, pGameWindow->PlayScene.HUDRect.top + 60);
     DrawString("\pMoves: ");
-    NumToString((long)(pGameWindow->Engine.Moves), &movesStr);
+    NumToString((int32_t)(pGameWindow->Engine.Moves), &movesStr);
     DrawString(movesStr);
     DrawString("\p/");
     DrawString(parStr);
@@ -103,14 +101,14 @@ void PlayScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
     // Draw Stars
     MoveTo(pGameWindow->PlayScene.HUDRect.left + 10, pGameWindow->PlayScene.HUDRect.top + 80);
     DrawString("\pStars: ");
-    NumToString((long)GameEngine_GetHalfStars(&(pGameWindow->Engine)), &halfStarsStr);
+    NumToString((int32_t)GameEngine_GetHalfStars(&(pGameWindow->Engine)), &halfStarsStr);
     DrawString(halfStarsStr);
     DrawString("\p/6");
     
     // Draw Score
     MoveTo(pGameWindow->PlayScene.HUDRect.left + 10, pGameWindow->PlayScene.HUDRect.top + 100);
     DrawString("\pScore: ");
-    NumToString((long)(pGameWindow->Engine.Score), &scoreStr);
+    NumToString((int32_t)(pGameWindow->Engine.Score), &scoreStr);
     DrawString(scoreStr);
     DrawString("\p/300");
 }

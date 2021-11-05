@@ -21,6 +21,9 @@ void GameWindow_Init(GameWindow *pGameWindow)
         ShowError("\pGameWindow WIND resource missing!", true);
     }
     
+    // Load PICT resources
+    Bitmaps_Init(&(pGameWindow->Bitmaps));
+    
     GameWindow_SetScene(pGameWindow, Title);
 }
 

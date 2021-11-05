@@ -6,18 +6,22 @@
 
 #include "MacCommon.h"
 #include "GameEngine.h"
+#include "Bitmaps.h"
 #include "Scenes.h"
 
-#define WindowPattern black
+#define WindowPattern  black
 
-typedef struct GameWindow
+typedef struct sGameWindow
 {
-    WindowPtr  Window;
-    GameEngine Engine;
-    SceneId    CurrentSceneId;
-    bool       SceneIsInitialized[NumScenes];
-    TitleScene TitleScene;
-    PlayScene  PlayScene;
+    WindowPtr     Window;
+    GameEngine    Engine;
+    Bitmaps       Bitmaps;
+    SceneId       CurrentSceneId;
+    bool          SceneIsInitialized[NumScenes];
+    TitleScene    TitleScene;
+    PlayScene     PlayScene;
+    LevelEndScene LevelEndScene;
+    GameEndScene  GameEndScene;
 } GameWindow;
 
 void GameWindow_Init(GameWindow *pGameWindow);

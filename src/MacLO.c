@@ -21,13 +21,13 @@ void MacLO_HandleUpdate(const EventRecord *pEvent);
 void MacLO_HandleMouseDown(const EventRecord *pEvent);
 void MacLO_HandleMouseUp(const EventRecord *pEvent);
 
-void MacLO_HandleMenuChoice(const long menuChoice);
-void MacLO_HandleAppleMenuChoice(const short item);
+void MacLO_HandleMenuChoice(const int32_t menuChoice);
+void MacLO_HandleAppleMenuChoice(const int16_t item);
 
 void MacLO_ShowAboutDialog();
-void MacLO_LaunchAppleMenuItem(const short item);
+void MacLO_LaunchAppleMenuItem(const int16_t item);
 
-void MacLO_HandleGameMenuChoice(const short item);
+void MacLO_HandleGameMenuChoice(const int16_t item);
 
 void MacLO_ToolBoxInit()
 {
@@ -116,8 +116,8 @@ void MacLO_HandleUpdate(const EventRecord *pEvent)
 void MacLO_HandleMouseDown(const EventRecord *pEvent)
 {
     WindowPtr window;
-    long windowPart;
-    long menuChoice;
+    int32_t windowPart;
+    int32_t menuChoice;
     Point mousePosition;
     
     windowPart = FindWindow(pEvent->where, &window);
@@ -140,7 +140,7 @@ void MacLO_HandleMouseDown(const EventRecord *pEvent)
 void MacLO_HandleMouseUp(const EventRecord *pEvent)
 {
     WindowPtr window;
-    long windowPart;
+    int32_t windowPart;
     Point mousePosition;
     
     windowPart = FindWindow(pEvent->where, &window);
@@ -155,10 +155,10 @@ void MacLO_HandleMouseUp(const EventRecord *pEvent)
     }
 }
 
-void MacLO_HandleMenuChoice(const long menuChoice)
+void MacLO_HandleMenuChoice(const int32_t menuChoice)
 {
-    short menu;
-    short item;
+    int16_t menu;
+    int16_t item;
     
     if (menuChoice != 0)
     {
@@ -179,11 +179,11 @@ void MacLO_HandleMenuChoice(const long menuChoice)
     }
 }
 
-void MacLO_HandleAppleMenuChoice(const short item)
+void MacLO_HandleAppleMenuChoice(const int16_t item)
 {
     MenuHandle appleMenu;
     Str255 accName;
-    short accNumber;
+    int16_t accNumber;
     
     switch (item)
     {
@@ -214,7 +214,7 @@ void MacLO_ShowAboutDialog()
     DisposDialog(dialog);
 }
 
-void MacLO_LaunchAppleMenuItem(const short item)
+void MacLO_LaunchAppleMenuItem(const int16_t item)
 {
     MenuHandle appleMenu;
     Str255 accName;
@@ -225,7 +225,7 @@ void MacLO_LaunchAppleMenuItem(const short item)
     
 }
 
-void MacLO_HandleGameMenuChoice(const short item)
+void MacLO_HandleGameMenuChoice(const int16_t item)
 {
     switch (item)
     {

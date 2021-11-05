@@ -11,8 +11,6 @@ void LevelEndScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
 {
     Str255 halfStarsStr;
     
-    SetPort(pGameWindow->Window);
-    
     // TODO: Proper level end
     if (fullRefresh)
     {
@@ -23,7 +21,7 @@ void LevelEndScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
     
     MoveTo(100, 125);
     DrawString("\pReceived ");
-    NumToString((long)GameEngine_GetHalfStars(&(pGameWindow->Engine)), &halfStarsStr);
+    NumToString((int32_t)GameEngine_GetHalfStars(&(pGameWindow->Engine)), &halfStarsStr);
     DrawString(halfStarsStr);
     DrawString("\p/6 half-stars.");
     

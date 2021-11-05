@@ -11,8 +11,6 @@ void GameEndScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
 {
     Str255 scoreStr;
     
-    SetPort(pGameWindow->Window);
-    
     // TODO: Proper level end
     if (fullRefresh)
     {
@@ -23,7 +21,7 @@ void GameEndScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
     
     MoveTo(100, 125);
     DrawString("\pScore: ");
-    NumToString((long)(pGameWindow->Engine.Score), &scoreStr);
+    NumToString((int32_t)(pGameWindow->Engine.Score), &scoreStr);
     DrawString(scoreStr);
     DrawString("\p/300");
 }
