@@ -16,13 +16,16 @@ typedef enum eSceneId
 
 typedef struct sTitleScene
 {
-    Rect      TitleRect;
+    Rect TitleRect;
+    Rect SetARect;
+    Rect SetBRect;
 } TitleScene;
 
 typedef struct sPlayScene
 {
     Rect PlayfieldRect;
     Rect HUDRect;
+    Rect LevelRect;
 } PlayScene;
 
 typedef struct sLevelEndScene

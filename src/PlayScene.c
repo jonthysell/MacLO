@@ -15,18 +15,32 @@
 #define HUDCornerSize PlayfieldCornerSize
 #define HUDPattern    PlayfieldPattern
 
+#define LevelTextScale 2
+
 void PlayScene_Init(GameWindow *pGameWindow)
 {
-    // Setup rects
+    Rect r1, r2;
+
+    // Setup Playfield
     pGameWindow->PlayScene.PlayfieldRect.top = PlayfieldMargin;
     pGameWindow->PlayScene.PlayfieldRect.bottom = pGameWindow->Window->portRect.bottom - PlayfieldMargin;
     pGameWindow->PlayScene.PlayfieldRect.left = pGameWindow->PlayScene.PlayfieldRect.top;
     pGameWindow->PlayScene.PlayfieldRect.right = pGameWindow->PlayScene.PlayfieldRect.bottom;
     
+    // Setup HUD
     pGameWindow->PlayScene.HUDRect.top = HUDMargin;
     pGameWindow->PlayScene.HUDRect.bottom = pGameWindow->Window->portRect.bottom - HUDMargin;
     pGameWindow->PlayScene.HUDRect.left = pGameWindow->PlayScene.PlayfieldRect.right + HUDMargin;
     pGameWindow->PlayScene.HUDRect.right = pGameWindow->Window->portRect.right - HUDMargin;
+    
+    // Setup Level
+    GetScaledPicFrame(pGameWindow->Engine.SetB ? pGameWindow->Bitmaps.BCharPict : pGameWindow->Bitmaps.ACharPict, LevelTextScale, &r1);
+    Bitmaps_GetNumberRect(&(pGameWindow->Bitmaps), 1 + pGameWindow->Engine.Level, LevelTextScale, &r2);
+    ConcatenateRect(&r1, &r2, &(pGameWindow->PlayScene.LevelRect));
+    
+    GetBoxRect(&(pGameWindow->PlayScene.HUDRect), Top, &r1);
+    GetBoxRect(&r1, Bottom, &r2);
+    CenterRect(&r2, &(pGameWindow->PlayScene.LevelRect));
 }
 
 void PlayScene_SetLightRect(const GameWindow *pGameWindow, Rect *pRect, const int8_t c, const int8_t r)
@@ -41,13 +55,12 @@ void PlayScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
 {
     int8_t r, c;
     Rect lightRect;
-    Str255 levelStr, parStr, movesStr, halfStarsStr, scoreStr;
     
     if (fullRefresh)
     {
         // Fill backgrounds
         FillRoundRect(&(pGameWindow->PlayScene.PlayfieldRect), PlayfieldCornerSize, PlayfieldCornerSize, PlayfieldPattern);
-        FillRoundRect(&(pGameWindow->PlayScene.HUDRect), HUDCornerSize, HUDCornerSize, HUDPattern);
+        //FillRoundRect(&(pGameWindow->PlayScene.HUDRect), HUDCornerSize, HUDCornerSize, HUDPattern);
     }
     
     // Draw Playfield
@@ -74,43 +87,19 @@ void PlayScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
     
     // Draw HUD
     
-    ForeColor(blackColor);
-    TextFace(bold + outline);
-    
     // Draw Level
-    MoveTo(pGameWindow->PlayScene.HUDRect.left + 10, pGameWindow->PlayScene.HUDRect.top + 20);
-    DrawString("\pLevel: ");
-    NumToString(1L + pGameWindow->Engine.Level, &levelStr);
-    DrawString(levelStr);
-    DrawString("\p/50");
-    
-    // Draw Par
-    MoveTo(pGameWindow->PlayScene.HUDRect.left + 10, pGameWindow->PlayScene.HUDRect.top + 40);
-    DrawString("\pPar: ");
-    NumToString((int32_t)(pGameWindow->Engine.Par), &parStr);
-    DrawString(parStr);
-    
-    // Draw Moves
-    MoveTo(pGameWindow->PlayScene.HUDRect.left + 10, pGameWindow->PlayScene.HUDRect.top + 60);
-    DrawString("\pMoves: ");
-    NumToString((int32_t)(pGameWindow->Engine.Moves), &movesStr);
-    DrawString(movesStr);
-    DrawString("\p/");
-    DrawString(parStr);
+    MoveTo(pGameWindow->PlayScene.LevelRect.left, pGameWindow->PlayScene.LevelRect.top);
+    if (pGameWindow->Engine.SetB)
+    {
+        Bitmaps_DrawBChar(&(pGameWindow->Bitmaps), LevelTextScale);
+    }
+    else
+    {
+        Bitmaps_DrawAChar(&(pGameWindow->Bitmaps), LevelTextScale);
+    }
+    Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), 1 + pGameWindow->Engine.Level, LevelTextScale);
     
     // Draw Stars
-    MoveTo(pGameWindow->PlayScene.HUDRect.left + 10, pGameWindow->PlayScene.HUDRect.top + 80);
-    DrawString("\pStars: ");
-    NumToString((int32_t)GameEngine_GetHalfStars(&(pGameWindow->Engine)), &halfStarsStr);
-    DrawString(halfStarsStr);
-    DrawString("\p/6");
-    
-    // Draw Score
-    MoveTo(pGameWindow->PlayScene.HUDRect.left + 10, pGameWindow->PlayScene.HUDRect.top + 100);
-    DrawString("\pScore: ");
-    NumToString((int32_t)(pGameWindow->Engine.Score), &scoreStr);
-    DrawString(scoreStr);
-    DrawString("\p/300");
 }
 
 void PlayScene_Click(GameWindow *pGameWindow, const Point *pPosition)

@@ -3,11 +3,6 @@
 
 #include "MacCommon.h"
 
-int32_t GetThemeID()
-{
-    return 0;
-}
-
 void ShowError(Str255 message, bool isFatal)
 {
     ParamText(message, EmptyString, EmptyString, EmptyString);
@@ -35,6 +30,18 @@ void CenterRectV(const Rect *pOuterRect, Rect *pInnerRect)
 {
     OffsetRect(pInnerRect, 0, pOuterRect->top - pInnerRect->top);
     OffsetRect(pInnerRect, 0, (pOuterRect->bottom - pInnerRect->bottom) / 2);
+}
+
+void ConcatenateRect(const Rect *pLeftRect, const Rect *pRightRect, Rect *pDestRect)
+{
+    Rect newRightRect;
+    
+    newRightRect.top = pLeftRect->top;
+    newRightRect.left = pLeftRect->right;
+    newRightRect.bottom = newRightRect.top + (pRightRect->bottom - pRightRect->top);
+    newRightRect.right = newRightRect.left + (pRightRect->right - pRightRect->left);
+    
+    UnionRect(pLeftRect, &newRightRect, pDestRect);
 }
 
 void GetBoxRect(const Rect *pOuterRect, const BoxAlignment boxAlignment, Rect *pBoxRect)
@@ -101,4 +108,12 @@ void GetBoxRect(const Rect *pOuterRect, const BoxAlignment boxAlignment, Rect *p
             pBoxRect->right = pOuterRect->right - boxWidth;
             break;
     }
+}
+
+void GetScaledPicFrame(const PicHandle picHandle, const uint8_t scale, Rect *pDestRect)
+{
+    *pDestRect = (**(picHandle)).picFrame;
+    
+    pDestRect->right = pDestRect->left + ((pDestRect->right - pDestRect->left) * max(scale, 1));
+    pDestRect->bottom = pDestRect->top + ((pDestRect->bottom - pDestRect->top) * max(scale, 1));
 }

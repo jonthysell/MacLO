@@ -4,13 +4,25 @@
 #include "TitleScene.h"
 #include "Bitmaps.h"
 
+#define TitleTextScale 2
+
 void TitleScene_Init(GameWindow *pGameWindow)
 {
+    Rect r;
+    
     const Rect *pContentRect = &(pGameWindow->Window->portRect);
     
     // Setup rects
-    pGameWindow->TitleScene.TitleRect = (**(pGameWindow->Bitmaps.TitlePict)).picFrame;
+    GetScaledPicFrame(pGameWindow->Bitmaps.TitlePict, 1, &(pGameWindow->TitleScene.TitleRect));
     CenterRect(pContentRect, &(pGameWindow->TitleScene.TitleRect));
+    
+    GetBoxRect(pContentRect, BottomLeft, &r);
+    GetScaledPicFrame(pGameWindow->Bitmaps.ACharPict, TitleTextScale, &(pGameWindow->TitleScene.SetARect));
+    CenterRect(&r, &(pGameWindow->TitleScene.SetARect));
+    
+    GetBoxRect(pContentRect, BottomRight, &r);
+    GetScaledPicFrame(pGameWindow->Bitmaps.BCharPict, TitleTextScale, &(pGameWindow->TitleScene.SetBRect));
+    CenterRect(&r, &(pGameWindow->TitleScene.SetBRect));
 }
 
 void TitleScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
@@ -20,34 +32,28 @@ void TitleScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
     {
     }
     
-    // Draw Title PICT
+    // Draw Title
     DrawPicture(pGameWindow->Bitmaps.TitlePict, &(pGameWindow->TitleScene.TitleRect));
     
-    TextFace(bold + outline);
+    // Draw Set A
+    MoveTo(pGameWindow->TitleScene.SetARect.left, pGameWindow->TitleScene.SetARect.top);
+    Bitmaps_DrawAChar(&(pGameWindow->Bitmaps), TitleTextScale);
     
-    MoveTo(100, pGameWindow->TitleScene.TitleRect.bottom + 30);
-    DrawString("\pSet A");
-    
-    MoveTo(350, pGameWindow->TitleScene.TitleRect.bottom + 30);
-    DrawString("\pSet B");
+    // Draw Set B
+    MoveTo(pGameWindow->TitleScene.SetBRect.left, pGameWindow->TitleScene.SetBRect.top);
+    Bitmaps_DrawBChar(&(pGameWindow->Bitmaps), TitleTextScale);
 }
 
 void TitleScene_Click(GameWindow *pGameWindow, const Point *pPosition)
 {
-    bool setB;
-    
-    // TODO: Proper click handling
-    
-    if (pPosition->h < ((pGameWindow->Window->portRect.right - pGameWindow->Window->portRect.left) / 2))
+    if (PtInRect(*pPosition, &(pGameWindow->TitleScene.SetARect)))
     {
-        setB = false;
+        GameEngine_NewGame(&(pGameWindow->Engine), false);
+        GameWindow_SetScene(pGameWindow, Play);
     }
-    else
+    else if (PtInRect(*pPosition, &(pGameWindow->TitleScene.SetBRect)))
     {
-        setB = true;
+        GameEngine_NewGame(&(pGameWindow->Engine), true);
+        GameWindow_SetScene(pGameWindow, Play);
     }
-
-    GameEngine_NewGame(&(pGameWindow->Engine), setB);
-    
-    GameWindow_SetScene(pGameWindow, Play);
 }

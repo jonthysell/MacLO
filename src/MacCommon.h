@@ -29,14 +29,16 @@ typedef enum eBoxAlignment
 
 pascal OSErr SetDialogDefaultItem(DialogPtr theDialog, int16_t newItem) = { 0x303C, 0x0304, 0xAA68 };
 
-int32_t GetThemeID();
-
 void ShowError(Str255 message, bool isFatal);
 
 void CenterRect(const Rect *pOuterRect, Rect *pInnerRect);
 void CenterRectH(const Rect *pOuterRect, Rect *pInnerRect);
 void CenterRectV(const Rect *pOuterRect, Rect *pInnerRect);
 
+void ConcatenateRect(const Rect *pLeftRect, const Rect *pRightRect, Rect *pDestRect);
+
 void GetBoxRect(const Rect *pOuterRect, const BoxAlignment boxAlignment, Rect *pBoxRect);
+
+void GetScaledPicFrame(const PicHandle picHandle, const uint8_t scale, Rect *pDestRect);
 
 #endif
