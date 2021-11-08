@@ -8,39 +8,64 @@
 #define PlayfieldCornerSize 12
 #define LightMargin         6
 #define LightSize           50
-#define LightCornerSize     8
+#define LightCornerSize     12
 #define PlayfieldPattern    ltGray
 
 #define HUDMargin     PlayfieldMargin
 #define HUDCornerSize PlayfieldCornerSize
 #define HUDPattern    PlayfieldPattern
 
-#define LevelTextScale 2
+#define LevelTextScale 3
+#define HalfStarScale  2
+#define ScoreTextScale 1
 
 void PlayScene_Init(GameWindow *pGameWindow)
 {
-    Rect r1, r2;
+    Rect r;
+    
+    const Rect *pContentRect = &(pGameWindow->Window->portRect);
 
     // Setup Playfield
     pGameWindow->PlayScene.PlayfieldRect.top = PlayfieldMargin;
-    pGameWindow->PlayScene.PlayfieldRect.bottom = pGameWindow->Window->portRect.bottom - PlayfieldMargin;
+    pGameWindow->PlayScene.PlayfieldRect.bottom = pContentRect->bottom - PlayfieldMargin;
     pGameWindow->PlayScene.PlayfieldRect.left = pGameWindow->PlayScene.PlayfieldRect.top;
     pGameWindow->PlayScene.PlayfieldRect.right = pGameWindow->PlayScene.PlayfieldRect.bottom;
     
     // Setup HUD
     pGameWindow->PlayScene.HUDRect.top = HUDMargin;
-    pGameWindow->PlayScene.HUDRect.bottom = pGameWindow->Window->portRect.bottom - HUDMargin;
+    pGameWindow->PlayScene.HUDRect.bottom = pContentRect->bottom - HUDMargin;
     pGameWindow->PlayScene.HUDRect.left = pGameWindow->PlayScene.PlayfieldRect.right + HUDMargin;
-    pGameWindow->PlayScene.HUDRect.right = pGameWindow->Window->portRect.right - HUDMargin;
+    pGameWindow->PlayScene.HUDRect.right = pContentRect->right - HUDMargin;
     
-    // Setup Level
-    GetScaledPicFrame(pGameWindow->Engine.SetB ? pGameWindow->Bitmaps.BCharPict : pGameWindow->Bitmaps.ACharPict, LevelTextScale, &r1);
-    Bitmaps_GetNumberRect(&(pGameWindow->Bitmaps), 1 + pGameWindow->Engine.Level, LevelTextScale, &r2);
-    ConcatenateRect(&r1, &r2, &(pGameWindow->PlayScene.LevelRect));
+    // Setup level
+    GetScaledPicFrame(pGameWindow->Engine.SetB ? pGameWindow->Bitmaps.BCharPict : pGameWindow->Bitmaps.ACharPict, LevelTextScale, &(pGameWindow->PlayScene.LevelRect));
+    Bitmaps_GetNumberRect(&(pGameWindow->Bitmaps), 1 + pGameWindow->Engine.Level, LevelTextScale, &r);
+    ConcatenateRect(&(pGameWindow->PlayScene.LevelRect), &r, &(pGameWindow->PlayScene.LevelRect));
+
+    GetBoxRect(&(pGameWindow->PlayScene.HUDRect), Top, &r);
+    CenterRect(&r, &(pGameWindow->PlayScene.LevelRect));
+
+    // Setup half-stars
+    Bitmaps_GetHalfStarsRect(&(pGameWindow->Bitmaps), GameEngine_GetHalfStars(&(pGameWindow->Engine)), MaxStars, HalfStarScale, &(pGameWindow->PlayScene.HalfStarsRect));
     
-    GetBoxRect(&(pGameWindow->PlayScene.HUDRect), Top, &r1);
-    GetBoxRect(&r1, Bottom, &r2);
-    CenterRect(&r2, &(pGameWindow->PlayScene.LevelRect));
+    GetBoxRect(&(pGameWindow->PlayScene.HUDRect), Center, &r);
+    CenterRect(&r, &(pGameWindow->PlayScene.HalfStarsRect));
+    
+    // Setup score
+    Bitmaps_GetNumberRect(&(pGameWindow->Bitmaps), pGameWindow->Engine.Score, ScoreTextScale, &(pGameWindow->PlayScene.ScoreRect));
+    GetScaledPicFrame(pGameWindow->Bitmaps.SlashCharPict, ScoreTextScale, &r);
+    ConcatenateRect(&(pGameWindow->PlayScene.ScoreRect), &r, &(pGameWindow->PlayScene.ScoreRect));
+    Bitmaps_GetNumberRect(&(pGameWindow->Bitmaps), PerfectScore, ScoreTextScale, &r);
+    ConcatenateRect(&(pGameWindow->PlayScene.ScoreRect), &r, &(pGameWindow->PlayScene.ScoreRect));
+    
+    GetBoxRect(&(pGameWindow->PlayScene.HUDRect), Bottom, &r);
+    CenterRect(&r, &(pGameWindow->PlayScene.ScoreRect));
+    
+    // Setup retry button
+    GetPictureRect(pGameWindow->Bitmaps.RetryButtonPict, &(pGameWindow->PlayScene.RetryButtonRect));
+    
+    GetBoxRect(&(pGameWindow->PlayScene.HUDRect), BottomLeft, &r);
+    CenterRect(&r, &(pGameWindow->PlayScene.RetryButtonRect));
 }
 
 void PlayScene_SetLightRect(const GameWindow *pGameWindow, Rect *pRect, const int8_t c, const int8_t r)
@@ -59,8 +84,10 @@ void PlayScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
     if (fullRefresh)
     {
         // Fill backgrounds
-        FillRoundRect(&(pGameWindow->PlayScene.PlayfieldRect), PlayfieldCornerSize, PlayfieldCornerSize, PlayfieldPattern);
-        //FillRoundRect(&(pGameWindow->PlayScene.HUDRect), HUDCornerSize, HUDCornerSize, HUDPattern);
+        ForeColor(whiteColor);
+        FrameRoundRect(&(pGameWindow->PlayScene.PlayfieldRect), PlayfieldCornerSize, PlayfieldCornerSize);
+        FrameRoundRect(&(pGameWindow->PlayScene.HUDRect), HUDCornerSize, HUDCornerSize);
+        ForeColor(blackColor);
     }
     
     // Draw Playfield
@@ -80,14 +107,14 @@ void PlayScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
             else
             {
                 // Draw OFF light
-                FillRoundRect(&lightRect, LightCornerSize, LightCornerSize, black);
+                FillRoundRect(&lightRect, LightCornerSize, LightCornerSize, dkGray);
             }
         }
     }
     
     // Draw HUD
     
-    // Draw Level
+    // Draw level
     MoveTo(pGameWindow->PlayScene.LevelRect.left, pGameWindow->PlayScene.LevelRect.top);
     if (pGameWindow->Engine.SetB)
     {
@@ -99,7 +126,18 @@ void PlayScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
     }
     Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), 1 + pGameWindow->Engine.Level, LevelTextScale);
     
-    // Draw Stars
+    // Draw half-stars
+    MoveTo(pGameWindow->PlayScene.HalfStarsRect.left, pGameWindow->PlayScene.HalfStarsRect.top);
+    Bitmaps_DrawHalfStars(&(pGameWindow->Bitmaps), GameEngine_GetHalfStars(&(pGameWindow->Engine)), MaxStars, HalfStarScale);
+    
+    // Draw score
+    MoveTo(pGameWindow->PlayScene.ScoreRect.left, pGameWindow->PlayScene.ScoreRect.top);
+    Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), pGameWindow->Engine.Score, ScoreTextScale);
+    Bitmaps_DrawSlashChar(&(pGameWindow->Bitmaps), ScoreTextScale);
+    Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), PerfectScore, ScoreTextScale);
+    
+    // Draw retry button
+    DrawPicture(pGameWindow->Bitmaps.RetryButtonPict, &(pGameWindow->PlayScene.RetryButtonRect));
 }
 
 void PlayScene_Click(GameWindow *pGameWindow, const Point *pPosition)
@@ -128,11 +166,18 @@ void PlayScene_Click(GameWindow *pGameWindow, const Point *pPosition)
         if (GameEngine_IsCompleted(&(pGameWindow->Engine)))
         {
             // Level was completed in the last click
+            GameWindow_Draw(pGameWindow, false);
             GameWindow_SetScene(pGameWindow, LevelEnd);
         }
     }
     else if (PtInRect(*pPosition, &(pGameWindow->PlayScene.HUDRect)))
     {
         // Click within HUD
+        
+        if (PtInRect(*pPosition, &(pGameWindow->PlayScene.RetryButtonRect)))
+        {
+            GameEngine_ResetLevel(&(pGameWindow->Engine));
+            GameWindow_Draw(pGameWindow, false);
+        }
     }
 }

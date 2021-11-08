@@ -39,6 +39,9 @@ void ConcatenateRect(const Rect *pLeftRect, const Rect *pRightRect, Rect *pDestR
 
 void GetBoxRect(const Rect *pOuterRect, const BoxAlignment boxAlignment, Rect *pBoxRect);
 
+void GetPictureRect(const PicHandle picHandle, Rect *pDestRect);
+
 void GetScaledPicFrame(const PicHandle picHandle, const uint8_t scale, Rect *pDestRect);
+void DrawScaledPic(const PicHandle pic, const uint8_t scale);
 
 #endif

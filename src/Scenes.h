@@ -26,16 +26,24 @@ typedef struct sPlayScene
     Rect PlayfieldRect;
     Rect HUDRect;
     Rect LevelRect;
+    Rect HalfStarsRect;
+    Rect ScoreRect;
+    Rect RetryButtonRect;
 } PlayScene;
 
 typedef struct sLevelEndScene
 {
-    Rect temp;
+    Rect LevelRect;
+    Rect HalfStarsRect;
+    Rect ScoreRect;
+    Rect RetryButtonRect;
+    Rect NextButtonRect;
 } LevelEndScene;
 
 typedef struct sGameEndScene
 {
-    Rect temp;
+    Rect SetRect;
+    Rect ScoreRect;
 } GameEndScene;
 
 #endif

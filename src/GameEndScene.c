@@ -3,32 +3,60 @@
 
 #include "GameEndScene.h"
 
+#define SetTextScale   6
+#define ScoreTextScale 3
+
 void GameEndScene_Init(GameWindow *pGameWindow)
 {
+    Rect r;
+    
+    const Rect *pContentRect = &(pGameWindow->Window->portRect);
+    
+    // Setup set
+    GetScaledPicFrame(pGameWindow->Bitmaps.StarPicts[StarPictCount - 1], SetTextScale, &r);
+    GetScaledPicFrame(pGameWindow->Engine.SetB ? pGameWindow->Bitmaps.BCharPict : pGameWindow->Bitmaps.ACharPict, SetTextScale, &(pGameWindow->GameEndScene.SetRect));
+    ConcatenateRect(&r, &(pGameWindow->GameEndScene.SetRect), &(pGameWindow->GameEndScene.SetRect));
+    ConcatenateRect(&(pGameWindow->GameEndScene.SetRect), &r, &(pGameWindow->GameEndScene.SetRect));
+    
+    GetBoxRect(pContentRect, Top, &r);
+    GetBoxRect(&r, Bottom, &r);
+    CenterRect(&r, &(pGameWindow->GameEndScene.SetRect));
+    
+    // Setup score
+    Bitmaps_GetNumberRect(&(pGameWindow->Bitmaps), pGameWindow->Engine.Score, ScoreTextScale, &(pGameWindow->GameEndScene.ScoreRect));
+    GetScaledPicFrame(pGameWindow->Bitmaps.SlashCharPict, ScoreTextScale, &r);
+    ConcatenateRect(&(pGameWindow->GameEndScene.ScoreRect), &r, &(pGameWindow->GameEndScene.ScoreRect));
+    Bitmaps_GetNumberRect(&(pGameWindow->Bitmaps), PerfectScore, ScoreTextScale, &r);
+    ConcatenateRect(&(pGameWindow->GameEndScene.ScoreRect), &r, &(pGameWindow->GameEndScene.ScoreRect));
+    
+    GetBoxRect(pContentRect, Bottom, &r);
+    GetBoxRect(&r, Top, &r);
+    CenterRect(&r, &(pGameWindow->GameEndScene.ScoreRect));
 }
 
 void GameEndScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
 {
-    Str255 scoreStr;
-    
-    // TODO: Proper level end
-    if (fullRefresh)
+    // Draw set
+    MoveTo(pGameWindow->GameEndScene.SetRect.left, pGameWindow->GameEndScene.SetRect.top);
+    DrawScaledPic(pGameWindow->Bitmaps.StarPicts[StarPictCount - 1], SetTextScale);
+    if (pGameWindow->Engine.SetB)
     {
+        Bitmaps_DrawBChar(&(pGameWindow->Bitmaps), SetTextScale);
     }
+    else
+    {
+        Bitmaps_DrawAChar(&(pGameWindow->Bitmaps), SetTextScale);
+    }
+    DrawScaledPic(pGameWindow->Bitmaps.StarPicts[StarPictCount - 1], SetTextScale);
     
-    MoveTo(100, 100);
-    DrawString("\pGame complete! Click to continue.");
-    
-    MoveTo(100, 125);
-    DrawString("\pScore: ");
-    NumToString((int32_t)(pGameWindow->Engine.Score), &scoreStr);
-    DrawString(scoreStr);
-    DrawString("\p/300");
+    // Draw score
+    MoveTo(pGameWindow->GameEndScene.ScoreRect.left, pGameWindow->GameEndScene.ScoreRect.top);
+    Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), pGameWindow->Engine.Score, ScoreTextScale);
+    Bitmaps_DrawSlashChar(&(pGameWindow->Bitmaps), ScoreTextScale);
+    Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), PerfectScore, ScoreTextScale);
 }
 
 void GameEndScene_Click(GameWindow *pGameWindow, const Point *pPosition)
 {
-    // TODO: Proper click handling
-    
-    GameWindow_SetScene(pGameWindow, Title);
+    // Do nothing
 }

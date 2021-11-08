@@ -77,25 +77,20 @@ void GameWindow_Click(GameWindow *pGameWindow, const Point *pPosition)
 
 void GameWindow_SetScene(GameWindow *pGameWindow, const SceneId sceneId)
 {
-    GameWindow_Draw(pGameWindow, false);
-    if (!(pGameWindow->SceneIsInitialized[sceneId]))
+    switch (sceneId)
     {
-        switch (sceneId)
-        {
-            case Title:
-                TitleScene_Init(pGameWindow);
-                break;
-            case Play:
-                PlayScene_Init(pGameWindow);
-                break;
-            case LevelEnd:
-                LevelEndScene_Init(pGameWindow);
-                break;
-            case GameEnd:
-                GameEndScene_Init(pGameWindow);
-                break;
-        }
-        pGameWindow->SceneIsInitialized[sceneId] = true;
+        case Title:
+            TitleScene_Init(pGameWindow);
+            break;
+        case Play:
+            PlayScene_Init(pGameWindow);
+            break;
+        case LevelEnd:
+            LevelEndScene_Init(pGameWindow);
+            break;
+        case GameEnd:
+            GameEndScene_Init(pGameWindow);
+            break;
     }
     pGameWindow->CurrentSceneId = sceneId;
     GameWindow_Draw(pGameWindow, true);

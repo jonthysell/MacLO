@@ -13,7 +13,7 @@ void TitleScene_Init(GameWindow *pGameWindow)
     const Rect *pContentRect = &(pGameWindow->Window->portRect);
     
     // Setup rects
-    GetScaledPicFrame(pGameWindow->Bitmaps.TitlePict, 1, &(pGameWindow->TitleScene.TitleRect));
+    GetPictureRect(pGameWindow->Bitmaps.TitlePict, &(pGameWindow->TitleScene.TitleRect));
     CenterRect(pContentRect, &(pGameWindow->TitleScene.TitleRect));
     
     GetBoxRect(pContentRect, BottomLeft, &r);
@@ -27,11 +27,6 @@ void TitleScene_Init(GameWindow *pGameWindow)
 
 void TitleScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
 {
-    // TODO: Proper title
-    if (fullRefresh)
-    {
-    }
-    
     // Draw Title
     DrawPicture(pGameWindow->Bitmaps.TitlePict, &(pGameWindow->TitleScene.TitleRect));
     

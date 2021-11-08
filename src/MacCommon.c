@@ -47,6 +47,7 @@ void ConcatenateRect(const Rect *pLeftRect, const Rect *pRightRect, Rect *pDestR
 void GetBoxRect(const Rect *pOuterRect, const BoxAlignment boxAlignment, Rect *pBoxRect)
 {
     int32_t boxWidth, boxHeight;
+    Rect resultRect;
     
     boxWidth = (pOuterRect->right - pOuterRect->left) / 3;
     boxHeight = (pOuterRect->bottom - pOuterRect->top) / 3;
@@ -54,66 +55,87 @@ void GetBoxRect(const Rect *pOuterRect, const BoxAlignment boxAlignment, Rect *p
     switch (boxAlignment)
     {
         case Top:
-            pBoxRect->top = pOuterRect->top;
-            pBoxRect->left = pOuterRect->left + boxWidth;
-            pBoxRect->bottom = pOuterRect->top + boxHeight;
-            pBoxRect->right = pOuterRect->right - boxWidth;
+            resultRect.top = pOuterRect->top;
+            resultRect.left = pOuterRect->left + boxWidth;
+            resultRect.bottom = pOuterRect->top + boxHeight;
+            resultRect.right = pOuterRect->right - boxWidth;
             break;
         case TopLeft:
-            pBoxRect->top = pOuterRect->top;
-            pBoxRect->left = pOuterRect->left;
-            pBoxRect->bottom = pOuterRect->top + boxHeight;
-            pBoxRect->right = pOuterRect->left + boxWidth;
+            resultRect.top = pOuterRect->top;
+            resultRect.left = pOuterRect->left;
+            resultRect.bottom = pOuterRect->top + boxHeight;
+            resultRect.right = pOuterRect->left + boxWidth;
             break;
         case Left:
-            pBoxRect->top = pOuterRect->top + boxHeight;
-            pBoxRect->left = pOuterRect->left;
-            pBoxRect->bottom = pOuterRect->bottom - boxHeight;
-            pBoxRect->right = pOuterRect->left + boxWidth;
+            resultRect.top = pOuterRect->top + boxHeight;
+            resultRect.left = pOuterRect->left;
+            resultRect.bottom = pOuterRect->bottom - boxHeight;
+            resultRect.right = pOuterRect->left + boxWidth;
             break;
         case BottomLeft:
-            pBoxRect->top = pOuterRect->bottom - boxHeight;
-            pBoxRect->left = pOuterRect->left;
-            pBoxRect->bottom = pOuterRect->bottom;
-            pBoxRect->right = pOuterRect->left + boxWidth;
+            resultRect.top = pOuterRect->bottom - boxHeight;
+            resultRect.left = pOuterRect->left;
+            resultRect.bottom = pOuterRect->bottom;
+            resultRect.right = pOuterRect->left + boxWidth;
             break;
         case Bottom:
-            pBoxRect->top = pOuterRect->bottom - boxHeight;
-            pBoxRect->left = pOuterRect->left + boxWidth;
-            pBoxRect->bottom = pOuterRect->bottom;
-            pBoxRect->right = pOuterRect->right - boxWidth;
+            resultRect.top = pOuterRect->bottom - boxHeight;
+            resultRect.left = pOuterRect->left + boxWidth;
+            resultRect.bottom = pOuterRect->bottom;
+            resultRect.right = pOuterRect->right - boxWidth;
             break;
         case BottomRight:
-            pBoxRect->top = pOuterRect->bottom - boxHeight;
-            pBoxRect->left = pOuterRect->right - boxWidth;
-            pBoxRect->bottom = pOuterRect->bottom;
-            pBoxRect->right = pOuterRect->right;
+            resultRect.top = pOuterRect->bottom - boxHeight;
+            resultRect.left = pOuterRect->right - boxWidth;
+            resultRect.bottom = pOuterRect->bottom;
+            resultRect.right = pOuterRect->right;
             break;
         case Right:
-            pBoxRect->top = pOuterRect->top + boxHeight;
-            pBoxRect->left = pOuterRect->right - boxWidth;
-            pBoxRect->bottom = pOuterRect->bottom - boxHeight;
-            pBoxRect->right = pOuterRect->right;
+            resultRect.top = pOuterRect->top + boxHeight;
+            resultRect.left = pOuterRect->right - boxWidth;
+            resultRect.bottom = pOuterRect->bottom - boxHeight;
+            resultRect.right = pOuterRect->right;
             break;
         case TopRight:
-            pBoxRect->top = pOuterRect->top;
-            pBoxRect->left = pOuterRect->right - boxWidth;
-            pBoxRect->bottom = pOuterRect->top + boxHeight;
-            pBoxRect->right = pOuterRect->right;
+            resultRect.top = pOuterRect->top;
+            resultRect.left = pOuterRect->right - boxWidth;
+            resultRect.bottom = pOuterRect->top + boxHeight;
+            resultRect.right = pOuterRect->right;
             break;
         case Center:
-            pBoxRect->top = pOuterRect->top + boxHeight;
-            pBoxRect->left = pOuterRect->left + boxWidth;
-            pBoxRect->bottom = pOuterRect->bottom - boxHeight;
-            pBoxRect->right = pOuterRect->right - boxWidth;
+            resultRect.top = pOuterRect->top + boxHeight;
+            resultRect.left = pOuterRect->left + boxWidth;
+            resultRect.bottom = pOuterRect->bottom - boxHeight;
+            resultRect.right = pOuterRect->right - boxWidth;
             break;
     }
+    
+    *pBoxRect = resultRect;
+}
+
+void GetPictureRect(const PicHandle picHandle, Rect *pDestRect)
+{
+    *pDestRect = (**(picHandle)).picFrame;
 }
 
 void GetScaledPicFrame(const PicHandle picHandle, const uint8_t scale, Rect *pDestRect)
 {
-    *pDestRect = (**(picHandle)).picFrame;
+    GetPictureRect(picHandle, pDestRect);
     
     pDestRect->right = pDestRect->left + ((pDestRect->right - pDestRect->left) * max(scale, 1));
     pDestRect->bottom = pDestRect->top + ((pDestRect->bottom - pDestRect->top) * max(scale, 1));
+}
+
+void DrawScaledPic(const PicHandle pic, const uint8_t scale)
+{
+    Point penPosition;
+    Rect destRect;
+    
+    GetPen(&penPosition);
+    GetScaledPicFrame(pic, scale, &destRect);
+    
+    OffsetRect(&destRect, penPosition.h, penPosition.v);
+    
+    DrawPicture(pic, &destRect);
+    MoveTo(destRect.right, destRect.top);
 }

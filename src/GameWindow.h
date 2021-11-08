@@ -17,7 +17,6 @@ typedef struct sGameWindow
     GameEngine    Engine;
     Bitmaps       Bitmaps;
     SceneId       CurrentSceneId;
-    bool          SceneIsInitialized[NumScenes];
     TitleScene    TitleScene;
     PlayScene     PlayScene;
     LevelEndScene LevelEndScene;
