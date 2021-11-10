@@ -35,4 +35,7 @@ void Bitmaps_DrawSlashChar(const Bitmaps *pBitmaps, const uint8_t scale);
 void Bitmaps_GetHalfStarsRect(const Bitmaps *pBitmaps, const uint8_t halfStars, const uint8_t maxStars, const uint8_t scale, Rect *pDestRect);
 void Bitmaps_DrawHalfStars(const Bitmaps *pBitmaps, const uint8_t halfStars, const uint8_t maxStars, const uint8_t scale);
 
+void Bitmaps_GetSoundRect(const Bitmaps *pBitmaps, const bool enabled, const uint8_t scale, Rect *pDestRect);
+void Bitmaps_DrawSound(const Bitmaps *pBitmaps, const bool enabled, const uint8_t scale);
+
 #endif

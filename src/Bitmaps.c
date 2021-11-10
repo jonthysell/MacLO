@@ -11,6 +11,8 @@
 #define StarPictBaseResID    (SlashCharPictResID + 1)
 #define NextButtonPictResID  (StarPictBaseResID + StarPictCount)
 #define RetryButtonPictResID (NextButtonPictResID + 1)
+#define SoundOffPictResID    (RetryButtonPictResID + 1)
+#define SoundOnPictResID     (SoundOffPictResID + 1)
 
 #define StarRectPadding 2
 
@@ -66,7 +68,7 @@ void Bitmaps_Init(Bitmaps *pBitmaps)
         }
     }
     
-    // Load next button
+    // Load slash char
     pBitmaps->SlashCharPict = GetPicture(SlashCharPictResID);
     if (pBitmaps->SlashCharPict == nil)
     {
@@ -85,6 +87,20 @@ void Bitmaps_Init(Bitmaps *pBitmaps)
     if (pBitmaps->RetryButtonPict == nil)
     {
         ShowError("\pRetry button PICT resource missing!", true);
+    }
+    
+    // Load sound off
+    pBitmaps->SoundOffPict = GetPicture(SoundOffPictResID);
+    if (pBitmaps->SoundOffPict == nil)
+    {
+        ShowError("\pSound off PICT resource missing!", true);
+    }
+    
+    // Load sound on
+    pBitmaps->SoundOnPict = GetPicture(SoundOnPictResID);
+    if (pBitmaps->SoundOnPict == nil)
+    {
+        ShowError("\pSound on PICT resource missing!", true);
     }
 }
 
@@ -216,6 +232,35 @@ void Bitmaps_DrawHalfStars(const Bitmaps *pBitmaps, const uint8_t halfStars, con
     for (; drawn < maxStars; drawn++)
     {
         DrawScaledPic(pBitmaps->StarPicts[0], scale);
+        GetPen(&penPosition);
         MoveTo(penPosition.h + (StarRectPadding * scale), penPosition.v);
+    }
+}
+
+void Bitmaps_GetSoundRect(const Bitmaps *pBitmaps, const bool enabled, const uint8_t scale, Rect *pDestRect)
+{
+    Rect r;
+    
+    GetScaledPicFrame(pBitmaps->SoundOffPict, scale, pDestRect);
+    GetScaledPicFrame(pBitmaps->SoundOnPict, scale, &r);
+    ConcatenateRect(pDestRect, &r, pDestRect);
+}
+
+void Bitmaps_DrawSound(const Bitmaps *pBitmaps, const bool enabled, const uint8_t scale)
+{
+    Point penPosition;
+    Rect r;
+    
+    DrawScaledPic(pBitmaps->SoundOffPict, scale);
+    if (enabled)
+    {
+        DrawScaledPic(pBitmaps->SoundOnPict, scale);
+    }
+    else
+    {
+        GetScaledPicFrame(pBitmaps->SoundOnPict, scale, &r);
+        GetPen(&penPosition);
+        OffsetRect(&r, penPosition.h, penPosition.v);
+        FillRect(&r, black);
     }
 }

@@ -7,6 +7,7 @@
 #include "MacCommon.h"
 #include "GameEngine.h"
 #include "Bitmaps.h"
+#include "Sounds.h"
 #include "Scenes.h"
 
 #define WindowPattern  black
@@ -16,6 +17,7 @@ typedef struct sGameWindow
     WindowPtr     Window;
     GameEngine    Engine;
     Bitmaps       Bitmaps;
+    Sounds        Sounds;
     SceneId       CurrentSceneId;
     TitleScene    TitleScene;
     PlayScene     PlayScene;

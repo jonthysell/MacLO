@@ -24,6 +24,9 @@ void GameWindow_Init(GameWindow *pGameWindow)
     // Load PICT resources
     Bitmaps_Init(&(pGameWindow->Bitmaps));
     
+    // Load snd resources
+    Sounds_Init(&(pGameWindow->Sounds));
+    
     GameWindow_SetScene(pGameWindow, Title);
 }
 

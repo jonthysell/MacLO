@@ -19,6 +19,7 @@ typedef struct sTitleScene
     Rect TitleRect;
     Rect SetARect;
     Rect SetBRect;
+    Rect SoundButtonRect;
 } TitleScene;
 
 typedef struct sPlayScene
@@ -29,6 +30,7 @@ typedef struct sPlayScene
     Rect HalfStarsRect;
     Rect ScoreRect;
     Rect RetryButtonRect;
+    Rect SoundButtonRect;
 } PlayScene;
 
 typedef struct sLevelEndScene

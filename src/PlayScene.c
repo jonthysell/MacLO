@@ -9,11 +9,9 @@
 #define LightMargin         6
 #define LightSize           50
 #define LightCornerSize     12
-#define PlayfieldPattern    ltGray
 
 #define HUDMargin     PlayfieldMargin
 #define HUDCornerSize PlayfieldCornerSize
-#define HUDPattern    PlayfieldPattern
 
 #define LevelTextScale 3
 #define HalfStarScale  2
@@ -66,6 +64,11 @@ void PlayScene_Init(GameWindow *pGameWindow)
     
     GetBoxRect(&(pGameWindow->PlayScene.HUDRect), BottomLeft, &r);
     CenterRect(&r, &(pGameWindow->PlayScene.RetryButtonRect));
+    
+    // Setup sound button
+    Bitmaps_GetSoundRect(&(pGameWindow->Bitmaps), pGameWindow->Sounds.Enabled, 1, &(pGameWindow->PlayScene.SoundButtonRect));
+    GetBoxRect(&(pGameWindow->PlayScene.HUDRect), BottomRight, &r);
+    CenterRect(&r, &(pGameWindow->PlayScene.SoundButtonRect));
 }
 
 void PlayScene_SetLightRect(const GameWindow *pGameWindow, Rect *pRect, const int8_t c, const int8_t r)
@@ -86,7 +89,6 @@ void PlayScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
         // Fill backgrounds
         ForeColor(whiteColor);
         FrameRoundRect(&(pGameWindow->PlayScene.PlayfieldRect), PlayfieldCornerSize, PlayfieldCornerSize);
-        FrameRoundRect(&(pGameWindow->PlayScene.HUDRect), HUDCornerSize, HUDCornerSize);
         ForeColor(blackColor);
     }
     
@@ -138,6 +140,11 @@ void PlayScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
     
     // Draw retry button
     DrawPicture(pGameWindow->Bitmaps.RetryButtonPict, &(pGameWindow->PlayScene.RetryButtonRect));
+    
+    // Draw sound button
+    MoveTo(pGameWindow->PlayScene.SoundButtonRect.left, pGameWindow->PlayScene.SoundButtonRect.top);
+    Bitmaps_DrawSound(&(pGameWindow->Bitmaps), pGameWindow->Sounds.Enabled, 1);
+
 }
 
 void PlayScene_Click(GameWindow *pGameWindow, const Point *pPosition)
@@ -156,6 +163,7 @@ void PlayScene_Click(GameWindow *pGameWindow, const Point *pPosition)
                 
                 if (PtInRect(*pPosition, &lightRect))
                 {
+                    Sounds_PlayClickSnd(&(pGameWindow->Sounds));
                     GameEngine_ToggleLights(&(pGameWindow->Engine), c, r);
                     GameWindow_Draw(pGameWindow, false);
                     break;
@@ -176,7 +184,13 @@ void PlayScene_Click(GameWindow *pGameWindow, const Point *pPosition)
         
         if (PtInRect(*pPosition, &(pGameWindow->PlayScene.RetryButtonRect)))
         {
+            Sounds_PlayRetrySnd(&(pGameWindow->Sounds));
             GameEngine_ResetLevel(&(pGameWindow->Engine));
+            GameWindow_Draw(pGameWindow, false);
+        }
+        else if (PtInRect(*pPosition, &(pGameWindow->PlayScene.SoundButtonRect)))
+        {
+            pGameWindow->Sounds.Enabled = !pGameWindow->Sounds.Enabled;
             GameWindow_Draw(pGameWindow, false);
         }
     }

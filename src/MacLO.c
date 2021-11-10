@@ -199,7 +199,7 @@ void MacLO_HandleAppleMenuChoice(const int16_t item)
 void MacLO_ShowAboutDialog()
 {
     DialogPtr dialog;
-    int itemHit;
+    int32_t itemHit;
     
     dialog = GetNewDialog(AboutDialogResID, nil, MoveToFront);
     
@@ -222,7 +222,6 @@ void MacLO_LaunchAppleMenuItem(const int16_t item)
     appleMenu = GetMHandle(AppleMenuResID);
     GetItem(appleMenu, item, accName);
     OpenDeskAcc(accName);
-    
 }
 
 void MacLO_HandleGameMenuChoice(const int16_t item)

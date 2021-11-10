@@ -48,6 +48,9 @@ void LevelEndScene_Init(GameWindow *pGameWindow)
     
     GetBoxRect(pContentRect, BottomRight, &r);
     CenterRect(&r, &(pGameWindow->LevelEndScene.NextButtonRect));
+    
+    // Play done sound
+    Sounds_PlayDoneSnd(&(pGameWindow->Sounds));
 }
 
 void LevelEndScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
@@ -85,11 +88,13 @@ void LevelEndScene_Click(GameWindow *pGameWindow, const Point *pPosition)
 {
     if (PtInRect(*pPosition, &(pGameWindow->LevelEndScene.RetryButtonRect)))
     {
+        Sounds_PlayRetrySnd(&(pGameWindow->Sounds));
         GameEngine_ResetLevel(&(pGameWindow->Engine));
         GameWindow_SetScene(pGameWindow, Play);
     }
     else if (PtInRect(*pPosition, &(pGameWindow->LevelEndScene.NextButtonRect)))
     {
+        Sounds_PlayClickSnd(&(pGameWindow->Sounds));
         GameEngine_NextLevel(&(pGameWindow->Engine));
         GameWindow_SetScene(pGameWindow, GameEngine_IsGameOver(&(pGameWindow->Engine)) ? GameEnd : Play);
     }
