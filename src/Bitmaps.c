@@ -1,9 +1,13 @@
 // Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
+#include <OSUtils.h>
+
 #include "Bitmaps.h"
 
-#define TitlePictResID       BaseResID
+#define BasePictResID        BaseResID
+
+#define TitlePictResID       0
 #define NumCharPictBaseResID (TitlePictResID + 1)
 #define ACharPictResID       (NumCharPictBaseResID + NumCharPictCount)
 #define BCharPictResID       (ACharPictResID + 1)
@@ -16,14 +20,22 @@
 #define LightOffPictResID    (SoundOnPictResID + 1)
 #define LightOnPictResID     (LightOffPictResID + 1)
 
-#define StarRectPadding 2
+#define TotalPictCount       (LightOnPictResID + 1)
+
+#define StarRectPadding      2
+
+int16_t Bitmaps_GetOverrideBaseResID();
+
+PicHandle Bitmaps_GetPict(const int16_t holidayResID, const int16_t offset);
 
 void Bitmaps_Init(Bitmaps *pBitmaps)
 {
-    int16_t i;
+    int16_t i, baseResID;
+    
+    baseResID = Bitmaps_GetOverrideBaseResID();
     
     // Load title
-    pBitmaps->TitlePict = GetPicture(TitlePictResID);
+    pBitmaps->TitlePict = Bitmaps_GetPict(baseResID, TitlePictResID);
     if (pBitmaps->TitlePict == nil)
     {
         ShowError("\pTitle PICT resource missing!", true);
@@ -32,7 +44,7 @@ void Bitmaps_Init(Bitmaps *pBitmaps)
     // Load number chars
     for (i = 0; i < NumCharPictCount; i++)
     {
-        pBitmaps->NumCharPicts[i] = GetPicture(NumCharPictBaseResID + i);
+        pBitmaps->NumCharPicts[i] = Bitmaps_GetPict(baseResID, NumCharPictBaseResID + i);
         if (pBitmaps->NumCharPicts[i] == nil)
         {
             ShowError("\pNumber char PICT resource missing!", true);
@@ -40,21 +52,21 @@ void Bitmaps_Init(Bitmaps *pBitmaps)
     }
     
     // Load "A" char
-    pBitmaps->ACharPict = GetPicture(ACharPictResID);
+    pBitmaps->ACharPict = Bitmaps_GetPict(baseResID, ACharPictResID);
     if (pBitmaps->ACharPict == nil)
     {
         ShowError("\pA char PICT resource missing!", true);
     }
     
     // Load "B" char
-    pBitmaps->BCharPict = GetPicture(BCharPictResID);
+    pBitmaps->BCharPict = Bitmaps_GetPict(baseResID, BCharPictResID);
     if (pBitmaps->BCharPict == nil)
     {
         ShowError("\pB char PICT resource missing!", true);
     }
     
     // Load "/" char
-    pBitmaps->SlashCharPict = GetPicture(SlashCharPictResID);
+    pBitmaps->SlashCharPict = Bitmaps_GetPict(baseResID, SlashCharPictResID);
     if (pBitmaps->SlashCharPict == nil)
     {
         ShowError("\pSlash char PICT resource missing!", true);
@@ -63,7 +75,7 @@ void Bitmaps_Init(Bitmaps *pBitmaps)
     // Load half-stars
     for (i = 0; i < StarPictCount; i++)
     {
-        pBitmaps->StarPicts[i] = GetPicture(StarPictBaseResID + i);
+        pBitmaps->StarPicts[i] = Bitmaps_GetPict(baseResID, StarPictBaseResID + i);
         if (pBitmaps->StarPicts[i] == nil)
         {
             ShowError("\pStar PICT resource missing!", true);
@@ -71,53 +83,83 @@ void Bitmaps_Init(Bitmaps *pBitmaps)
     }
     
     // Load slash char
-    pBitmaps->SlashCharPict = GetPicture(SlashCharPictResID);
+    pBitmaps->SlashCharPict = Bitmaps_GetPict(baseResID, SlashCharPictResID);
     if (pBitmaps->SlashCharPict == nil)
     {
         ShowError("\pSlash char PICT resource missing!", true);
     }
     
     // Load next button
-    pBitmaps->NextButtonPict = GetPicture(NextButtonPictResID);
+    pBitmaps->NextButtonPict = Bitmaps_GetPict(baseResID, NextButtonPictResID);
     if (pBitmaps->NextButtonPict == nil)
     {
         ShowError("\pNext button PICT resource missing!", true);
     }
     
     // Load retry button
-    pBitmaps->RetryButtonPict = GetPicture(RetryButtonPictResID);
+    pBitmaps->RetryButtonPict = Bitmaps_GetPict(baseResID, RetryButtonPictResID);
     if (pBitmaps->RetryButtonPict == nil)
     {
         ShowError("\pRetry button PICT resource missing!", true);
     }
     
     // Load sound off
-    pBitmaps->SoundOffPict = GetPicture(SoundOffPictResID);
+    pBitmaps->SoundOffPict = Bitmaps_GetPict(baseResID, SoundOffPictResID);
     if (pBitmaps->SoundOffPict == nil)
     {
         ShowError("\pSound off PICT resource missing!", true);
     }
     
     // Load sound on
-    pBitmaps->SoundOnPict = GetPicture(SoundOnPictResID);
+    pBitmaps->SoundOnPict = Bitmaps_GetPict(baseResID, SoundOnPictResID);
     if (pBitmaps->SoundOnPict == nil)
     {
         ShowError("\pSound on PICT resource missing!", true);
     }
     
     // Load light off
-    pBitmaps->LightOffPict = GetPicture(LightOffPictResID);
+    pBitmaps->LightOffPict = Bitmaps_GetPict(baseResID, LightOffPictResID);
     if (pBitmaps->LightOffPict == nil)
     {
         ShowError("\pLight off PICT resource missing!", true);
     }
     
     // Load light on
-    pBitmaps->LightOnPict = GetPicture(LightOnPictResID);
+    pBitmaps->LightOnPict = Bitmaps_GetPict(baseResID, LightOnPictResID);
     if (pBitmaps->LightOnPict == nil)
     {
         ShowError("\pLight on PICT resource missing!", true);
     }
+}
+
+int16_t Bitmaps_GetOverrideBaseResID()
+{
+    uint32_t seconds;
+    DateTimeRec dateTime;
+    int16_t dayOfYear;
+    
+    GetDateTime(&seconds);
+    Secs2Date(seconds, &dateTime);
+    
+    // Calculate "day number" (1 - 366, always assume leap year)
+    dayOfYear = MonthOffset[dateTime.month - 1];
+    dayOfYear += dateTime.day;
+    
+    return BasePictResID + (dayOfYear * TotalPictCount);
+}
+
+PicHandle Bitmaps_GetPict(const int16_t baseResID, const int16_t offset)
+{
+    PicHandle pic;
+    pic = GetPicture(baseResID + offset);
+    
+    if (pic == nil)
+    {
+        // No override pic, get default
+        pic = GetPicture(BasePictResID + offset);
+    }
+    
+    return pic;
 }
 
 void Bitmaps_GetNumberRect(const Bitmaps *pBitmaps, const uint32_t number, const uint8_t scale, Rect *pDestRect)

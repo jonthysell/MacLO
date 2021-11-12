@@ -3,6 +3,21 @@
 
 #include "MacCommon.h"
 
+const int16_t MonthOffset[] = {
+    0,   // Jan
+    31,  // Feb
+    60,  // Mar
+    91,  // Apr
+    121, // May
+    152, // Jun
+    182, // Jul
+    213, // Aug
+    244, // Sep
+    274, // Oct
+    305, // Nov
+    335, // Dec
+};
+
 void ShowError(Str255 message, bool isFatal)
 {
     ParamText(message, EmptyString, EmptyString, EmptyString);

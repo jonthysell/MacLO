@@ -10,8 +10,7 @@
 #define LightSize           50
 #define LightCornerSize     12
 
-#define HUDMargin     PlayfieldMargin
-#define HUDCornerSize PlayfieldCornerSize
+#define HUDMargin PlayfieldMargin
 
 #define LevelTextScale 3
 #define HalfStarScale  2
@@ -105,13 +104,11 @@ void PlayScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
             {
                 // Draw ON light
                 DrawPicture(pGameWindow->Bitmaps.LightOnPict, &lightRect);
-                //FillRoundRect(&lightRect, LightCornerSize, LightCornerSize, white);
             }
             else
             {
                 // Draw OFF light
                 DrawPicture(pGameWindow->Bitmaps.LightOffPict, &lightRect);
-                //FillRoundRect(&lightRect, LightCornerSize, LightCornerSize, dkGray);
             }
         }
     }
@@ -146,7 +143,6 @@ void PlayScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
     // Draw sound button
     MoveTo(pGameWindow->PlayScene.SoundButtonRect.left, pGameWindow->PlayScene.SoundButtonRect.top);
     Bitmaps_DrawSound(&(pGameWindow->Bitmaps), pGameWindow->Sounds.Enabled, 1);
-
 }
 
 void PlayScene_Click(GameWindow *pGameWindow, const Point *pPosition)

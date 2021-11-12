@@ -14,6 +14,8 @@
 
 #define ErrorAlertResID BaseResID
 
+extern const int16_t MonthOffset[];
+
 typedef enum eBoxAlignment
 {
     Top,
