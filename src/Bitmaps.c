@@ -13,6 +13,8 @@
 #define RetryButtonPictResID (NextButtonPictResID + 1)
 #define SoundOffPictResID    (RetryButtonPictResID + 1)
 #define SoundOnPictResID     (SoundOffPictResID + 1)
+#define LightOffPictResID    (SoundOnPictResID + 1)
+#define LightOnPictResID     (LightOffPictResID + 1)
 
 #define StarRectPadding 2
 
@@ -101,6 +103,20 @@ void Bitmaps_Init(Bitmaps *pBitmaps)
     if (pBitmaps->SoundOnPict == nil)
     {
         ShowError("\pSound on PICT resource missing!", true);
+    }
+    
+    // Load light off
+    pBitmaps->LightOffPict = GetPicture(LightOffPictResID);
+    if (pBitmaps->LightOffPict == nil)
+    {
+        ShowError("\pLight off PICT resource missing!", true);
+    }
+    
+    // Load light on
+    pBitmaps->LightOnPict = GetPicture(LightOnPictResID);
+    if (pBitmaps->LightOnPict == nil)
+    {
+        ShowError("\pLight on PICT resource missing!", true);
     }
 }
 

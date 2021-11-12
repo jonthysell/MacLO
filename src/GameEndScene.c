@@ -32,9 +32,6 @@ void GameEndScene_Init(GameWindow *pGameWindow)
     GetBoxRect(pContentRect, Bottom, &r);
     GetBoxRect(&r, Top, &r);
     CenterRect(&r, &(pGameWindow->GameEndScene.ScoreRect));
-    
-    // Play done sound
-    Sounds_PlayDoneSnd(&(pGameWindow->Sounds));
 }
 
 void GameEndScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)

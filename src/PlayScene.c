@@ -104,12 +104,14 @@ void PlayScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
             if (GameEngine_GetLight(&(pGameWindow->Engine), c, r))
             {
                 // Draw ON light
-                FillRoundRect(&lightRect, LightCornerSize, LightCornerSize, white);
+                DrawPicture(pGameWindow->Bitmaps.LightOnPict, &lightRect);
+                //FillRoundRect(&lightRect, LightCornerSize, LightCornerSize, white);
             }
             else
             {
                 // Draw OFF light
-                FillRoundRect(&lightRect, LightCornerSize, LightCornerSize, dkGray);
+                DrawPicture(pGameWindow->Bitmaps.LightOffPict, &lightRect);
+                //FillRoundRect(&lightRect, LightCornerSize, LightCornerSize, dkGray);
             }
         }
     }
@@ -176,6 +178,7 @@ void PlayScene_Click(GameWindow *pGameWindow, const Point *pPosition)
             // Level was completed in the last click
             GameWindow_Draw(pGameWindow, false);
             GameWindow_SetScene(pGameWindow, LevelEnd);
+            Sounds_PlayDoneSnd(&(pGameWindow->Sounds));
         }
     }
     else if (PtInRect(*pPosition, &(pGameWindow->PlayScene.HUDRect)))

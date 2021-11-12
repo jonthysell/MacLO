@@ -21,6 +21,8 @@ typedef struct sBitmaps
     PicHandle RetryButtonPict;
     PicHandle SoundOffPict;
     PicHandle SoundOnPict;
+    PicHandle LightOffPict;
+    PicHandle LightOnPict;
 } Bitmaps;
 
 void Bitmaps_Init(Bitmaps *pBitmaps);
