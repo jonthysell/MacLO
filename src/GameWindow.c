@@ -27,12 +27,18 @@ void GameWindow_Init(GameWindow *pGameWindow)
     // Load snd resources
     Sounds_Init(&(pGameWindow->Sounds));
     
+    // Set port for first draw
+    SetPort(pGameWindow->Window);
+    
     GameWindow_SetScene(pGameWindow, Title);
 }
 
 void GameWindow_Draw(const GameWindow *pGameWindow, bool fullRefresh)
 {
+    GrafPtr oldPort;
     const Rect *pContentRect = &(pGameWindow->Window->portRect);
+    
+    GetPort(&oldPort);
     
     SetPort(pGameWindow->Window);
     
@@ -57,6 +63,8 @@ void GameWindow_Draw(const GameWindow *pGameWindow, bool fullRefresh)
             GameEndScene_Draw(pGameWindow, fullRefresh);
             break;
     }
+    
+    SetPort(oldPort);
 }
 
 void GameWindow_Click(GameWindow *pGameWindow, const Point *pPosition)
