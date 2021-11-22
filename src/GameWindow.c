@@ -27,8 +27,12 @@ void GameWindow_Init(GameWindow *pGameWindow)
     // Load snd resources
     Sounds_Init(&(pGameWindow->Sounds));
     
-    // Set port for first draw
+    // Initialize window buffer
+    WindowBuffer_Init(&(pGameWindow->WindowBuffer), pGameWindow->Window);
+    
+    // Setup graphics before first draw
     SetPort(pGameWindow->Window);
+    FillRect(&(pGameWindow->Window->portRect), WindowPattern);
     
     GameWindow_SetScene(pGameWindow, Title);
 }
@@ -38,9 +42,10 @@ void GameWindow_Draw(const GameWindow *pGameWindow, bool fullRefresh)
     GrafPtr oldPort;
     const Rect *pContentRect = &(pGameWindow->Window->portRect);
     
+    // Save the current port
     GetPort(&oldPort);
     
-    SetPort(pGameWindow->Window);
+    WindowBuffer_StartDraw(&(pGameWindow->WindowBuffer));
     
     if (fullRefresh)
     {
@@ -63,6 +68,8 @@ void GameWindow_Draw(const GameWindow *pGameWindow, bool fullRefresh)
             GameEndScene_Draw(pGameWindow, fullRefresh);
             break;
     }
+    
+    WindowBuffer_EndDraw(&(pGameWindow->WindowBuffer));
     
     SetPort(oldPort);
 }

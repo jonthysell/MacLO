@@ -54,13 +54,11 @@ void TitleScene_Click(GameWindow *pGameWindow, const Point *pPosition)
 {
     if (PtInRect(*pPosition, &(pGameWindow->TitleScene.SetARect)))
     {
-        Sounds_PlayClickSnd(&(pGameWindow->Sounds));
         GameEngine_NewGame(&(pGameWindow->Engine), false);
         GameWindow_SetScene(pGameWindow, Play);
     }
     else if (PtInRect(*pPosition, &(pGameWindow->TitleScene.SetBRect)))
     {
-        Sounds_PlayClickSnd(&(pGameWindow->Sounds));
         GameEngine_NewGame(&(pGameWindow->Engine), true);
         GameWindow_SetScene(pGameWindow, Play);
     }

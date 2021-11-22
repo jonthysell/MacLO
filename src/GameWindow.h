@@ -5,6 +5,7 @@
 #define GAMEWINDOW_H
 
 #include "MacCommon.h"
+#include "WindowBuffer.h"
 #include "GameEngine.h"
 #include "Bitmaps.h"
 #include "Sounds.h"
@@ -15,6 +16,7 @@
 typedef struct sGameWindow
 {
     WindowPtr     Window;
+    WindowBuffer  WindowBuffer;
     GameEngine    Engine;
     Bitmaps       Bitmaps;
     Sounds        Sounds;

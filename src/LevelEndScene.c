@@ -85,13 +85,12 @@ void LevelEndScene_Click(GameWindow *pGameWindow, const Point *pPosition)
 {
     if (PtInRect(*pPosition, &(pGameWindow->LevelEndScene.RetryButtonRect)))
     {
-        Sounds_PlayRetrySnd(&(pGameWindow->Sounds));
         GameEngine_ResetLevel(&(pGameWindow->Engine));
         GameWindow_SetScene(pGameWindow, Play);
+        Sounds_PlayRetrySnd(&(pGameWindow->Sounds));
     }
     else if (PtInRect(*pPosition, &(pGameWindow->LevelEndScene.NextButtonRect)))
     {
-        Sounds_PlayClickSnd(&(pGameWindow->Sounds));
         GameEngine_NextLevel(&(pGameWindow->Engine));
         
         if (GameEngine_IsGameOver(&(pGameWindow->Engine)))
