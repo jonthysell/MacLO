@@ -198,8 +198,11 @@ void MacLO_HandleAppleMenuChoice(const int16_t item)
 
 void MacLO_ShowAboutDialog()
 {
+    GrafPtr oldPort;
     DialogPtr dialog;
     int32_t itemHit;
+    
+    GetPort(&oldPort);
     
     dialog = GetNewDialog(AboutDialogResID, nil, MoveToFront);
     
@@ -212,6 +215,8 @@ void MacLO_ShowAboutDialog()
     ModalDialog(nil, &itemHit);
     
     DisposDialog(dialog);
+    
+    SetPort(oldPort);
 }
 
 void MacLO_LaunchAppleMenuItem(const int16_t item)
