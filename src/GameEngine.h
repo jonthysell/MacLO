@@ -20,6 +20,7 @@ typedef struct GameEngine
     int8_t   Level;
     bool     SetB;
     uint32_t Lights;
+    uint32_t PreviousLights;
     uint16_t Par;
     uint16_t Moves;
 } GameEngine;
@@ -39,5 +40,9 @@ bool GameEngine_IsGameOver(const GameEngine *pGameEngine);
 uint8_t GameEngine_GetHalfStars(const GameEngine *pGameEngine);
 
 void GameEngine_ToggleLights(GameEngine *pGameEngine, const int8_t x, const int8_t y);
+
+bool GameEngine_LightChanged(const GameEngine *pGameEngine, const int8_t x, const int8_t y);
+
+bool GameEngine_HalfStarsChanged(const GameEngine *pGameEngine);
 
 #endif

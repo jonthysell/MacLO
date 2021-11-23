@@ -98,17 +98,20 @@ void PlayScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
     {
         for (c = 0; c < PuzzleSize; c++)
         {
-            PlayScene_SetLightRect(pGameWindow, &lightRect, c, r);
-            
-            if (GameEngine_GetLight(&(pGameWindow->Engine), c, r))
+            if (fullRefresh || GameEngine_LightChanged(&(pGameWindow->Engine), c, r))
             {
-                // Draw ON light
-                DrawPicture(pGameWindow->Bitmaps.LightOnPict, &lightRect);
-            }
-            else
-            {
-                // Draw OFF light
-                DrawPicture(pGameWindow->Bitmaps.LightOffPict, &lightRect);
+                PlayScene_SetLightRect(pGameWindow, &lightRect, c, r);
+                
+                if (GameEngine_GetLight(&(pGameWindow->Engine), c, r))
+                {
+                    // Draw ON light
+                    DrawPicture(pGameWindow->Bitmaps.LightOnPict, &lightRect);
+                }
+                else
+                {
+                    // Draw OFF light
+                    DrawPicture(pGameWindow->Bitmaps.LightOffPict, &lightRect);
+                }
             }
         }
     }
@@ -116,29 +119,41 @@ void PlayScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
     // Draw HUD
     
     // Draw level
-    MoveTo(pGameWindow->PlayScene.LevelRect.left, pGameWindow->PlayScene.LevelRect.top);
-    if (pGameWindow->Engine.SetB)
+    if (fullRefresh)
     {
-        Bitmaps_DrawBChar(&(pGameWindow->Bitmaps), LevelTextScale);
+        MoveTo(pGameWindow->PlayScene.LevelRect.left, pGameWindow->PlayScene.LevelRect.top);
+        if (pGameWindow->Engine.SetB)
+        {
+            Bitmaps_DrawBChar(&(pGameWindow->Bitmaps), LevelTextScale);
+        }
+        else
+        {
+            Bitmaps_DrawAChar(&(pGameWindow->Bitmaps), LevelTextScale);
+        }
+        Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), 1 + pGameWindow->Engine.Level, LevelTextScale);
     }
-    else
-    {
-        Bitmaps_DrawAChar(&(pGameWindow->Bitmaps), LevelTextScale);
-    }
-    Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), 1 + pGameWindow->Engine.Level, LevelTextScale);
     
     // Draw half-stars
-    MoveTo(pGameWindow->PlayScene.HalfStarsRect.left, pGameWindow->PlayScene.HalfStarsRect.top);
-    Bitmaps_DrawHalfStars(&(pGameWindow->Bitmaps), GameEngine_GetHalfStars(&(pGameWindow->Engine)), MaxStars, HalfStarScale);
+    if (fullRefresh || GameEngine_HalfStarsChanged(&(pGameWindow->Engine)))
+    {
+        MoveTo(pGameWindow->PlayScene.HalfStarsRect.left, pGameWindow->PlayScene.HalfStarsRect.top);
+        Bitmaps_DrawHalfStars(&(pGameWindow->Bitmaps), GameEngine_GetHalfStars(&(pGameWindow->Engine)), MaxStars, HalfStarScale);
+    }
     
     // Draw score
-    MoveTo(pGameWindow->PlayScene.ScoreRect.left, pGameWindow->PlayScene.ScoreRect.top);
-    Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), pGameWindow->Engine.Score, ScoreTextScale);
-    Bitmaps_DrawSlashChar(&(pGameWindow->Bitmaps), ScoreTextScale);
-    Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), PerfectScore, ScoreTextScale);
+    if (fullRefresh)
+    {
+        MoveTo(pGameWindow->PlayScene.ScoreRect.left, pGameWindow->PlayScene.ScoreRect.top);
+        Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), pGameWindow->Engine.Score, ScoreTextScale);
+        Bitmaps_DrawSlashChar(&(pGameWindow->Bitmaps), ScoreTextScale);
+        Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), PerfectScore, ScoreTextScale);
+    }
     
     // Draw retry button
-    DrawPicture(pGameWindow->Bitmaps.RetryButtonPict, &(pGameWindow->PlayScene.RetryButtonRect));
+    if (fullRefresh)
+    {
+        DrawPicture(pGameWindow->Bitmaps.RetryButtonPict, &(pGameWindow->PlayScene.RetryButtonRect));
+    }
     
     // Draw sound button
     MoveTo(pGameWindow->PlayScene.SoundButtonRect.left, pGameWindow->PlayScene.SoundButtonRect.top);

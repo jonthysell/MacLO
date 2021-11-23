@@ -110,8 +110,9 @@ void GameWindow_SetScene(GameWindow *pGameWindow, const SceneId sceneId)
             GameEndScene_Init(pGameWindow);
             break;
     }
+    
     pGameWindow->CurrentSceneId = sceneId;
-    GameWindow_Draw(pGameWindow, true);
+    GameWindow_Draw(pGameWindow, true); // Always force a full refresh when changing scenes
 }
 
 void GameWindow_Show(const GameWindow *pGameWindow)

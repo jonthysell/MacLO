@@ -13,6 +13,7 @@ const uint8_t MinHalfStars = 1;
 const uint16_t PerfectScore = 300; // LevelCount * MaxHalfStars
 
 void GameEngine_LoadLevel(GameEngine *pGameEngine, const int8_t level, const bool setB);
+uint8_t GameEngine_CalculateHalfStars(const uint16_t par, const uint16_t moves);
 void GameEngine_ToggleSingleLight(GameEngine *pGameEngine, const int8_t x, const int8_t y);
 
 void GameEngine_NewGame(GameEngine *pGameEngine, const bool setB)
@@ -39,6 +40,7 @@ void GameEngine_LoadLevel(GameEngine *pGameEngine, const int8_t level, const boo
 {
     pGameEngine->Level = level;
     pGameEngine->SetB = setB;
+    pGameEngine->PreviousLights = pGameEngine->Lights;
     pGameEngine->Lights = Levels_GetLightsForLevel(pGameEngine->Level, setB);
     pGameEngine->Par = Levels_GetParForLevel(pGameEngine->Level);
     pGameEngine->Moves = 0;
@@ -66,7 +68,12 @@ bool GameEngine_IsGameOver(const GameEngine *pGameEngine)
 
 uint8_t GameEngine_GetHalfStars(const GameEngine *pGameEngine)
 {
-    uint8_t halfStarsLost = pGameEngine->Moves <= pGameEngine->Par ? 0 : max(0, (1 + pGameEngine->Moves - pGameEngine->Par) / 2);
+    return GameEngine_CalculateHalfStars(pGameEngine->Par, pGameEngine->Moves);
+}
+
+uint8_t GameEngine_CalculateHalfStars(const uint16_t par, const uint16_t moves)
+{
+    uint8_t halfStarsLost = moves <= par ? 0 : max(0, (1 + moves - par) / 2);
     return max(MinHalfStars, MaxHalfStars - halfStarsLost);
 }
 
@@ -74,6 +81,8 @@ void GameEngine_ToggleLights(GameEngine *pGameEngine, const int8_t x, const int8
 {
     int8_t targetX = max(0, min(x, PuzzleSize - 1));
     int8_t targetY = max(0, min(y, PuzzleSize - 1));
+    
+    pGameEngine->PreviousLights = pGameEngine->Lights;
     
     GameEngine_ToggleSingleLight(pGameEngine, targetX, targetY);
     GameEngine_ToggleSingleLight(pGameEngine, targetX + 1, targetY);
@@ -90,4 +99,20 @@ void GameEngine_ToggleSingleLight(GameEngine *pGameEngine, const int8_t x, const
     {
         bitToggle(pGameEngine->Lights, y * PuzzleSize + x);
     }
+}
+
+bool GameEngine_LightChanged(const GameEngine *pGameEngine, const int8_t x, const int8_t y)
+{
+    if (x >= 0 && x < PuzzleSize && y >= 0 && y < PuzzleSize)
+    {
+        return bitRead(pGameEngine->Lights, y * PuzzleSize + x) != bitRead(pGameEngine->PreviousLights, y * PuzzleSize + x);
+    }
+    
+    return false;
+}
+
+bool GameEngine_HalfStarsChanged(const GameEngine *pGameEngine)
+{
+    return pGameEngine->Moves == 0 ||
+        GameEngine_CalculateHalfStars(pGameEngine->Par, pGameEngine->Moves - 1) != GameEngine_GetHalfStars(pGameEngine);
 }
