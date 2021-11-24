@@ -1,3 +1,5 @@
+![MacLO Demo](./.github/demo.gif)
+
 # MacLO #
 
 MacLO is a clone of the puzzle game [Lights Out](https://en.wikipedia.org/wiki/Lights_Out_(game)) for the 68k Macintosh. It is a port of [ArduLO](https://github.com/jonthysell/ArduLO) for the Arduboy.
