@@ -11,7 +11,6 @@
 typedef struct sSounds
 {
     bool          Enabled;
-    SndChannelPtr SndChannel;
     Handle        ClickSnd;
     Handle        RetrySnd;
     Handle        DoneSnd;
