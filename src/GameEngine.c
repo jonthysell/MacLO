@@ -37,8 +37,22 @@ void GameEngine_Init(GameEngine *pGameEngine)
 
 void GameEngine_NewGame(GameEngine *pGameEngine, const bool setB)
 {
+    int8_t level, startLevel;
+    
     pGameEngine->SetB = setB;
-    GameEngine_StartLevel(pGameEngine, 0);
+    
+    startLevel = 0;
+    for (level = 0; level < LevelCount; level++)
+    {
+        // Find the first uncompleted level
+        if (GameEngine_GetScore(pGameEngine, level) == 0)
+        {
+            startLevel = level;
+            break;
+        }
+    }
+    
+    GameEngine_StartLevel(pGameEngine, startLevel);
 }
 
 void GameEngine_ResetGame(GameEngine *pGameEngine)
@@ -52,7 +66,7 @@ void GameEngine_ResetGame(GameEngine *pGameEngine)
     }
 }
 
-void GameEngine_StartLevel(GameEngine *pGameEngine, const uint8_t level)
+void GameEngine_StartLevel(GameEngine *pGameEngine, const int8_t level)
 {
     GameEngine_LoadLevel(pGameEngine, level, pGameEngine->SetB);
 }

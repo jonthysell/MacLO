@@ -135,7 +135,7 @@ void GameWindow_Show(const GameWindow *pGameWindow)
 
 void GameWindow_ClearScores(GameWindow *pGameWindow)
 {
-    if (ShowConfirm("\pClear all scores?"))
+    if (ShowConfirm("\pAre you sure you want to clear all scores?"))
     {
         GameEngine_ResetGame(&(pGameWindow->Engine));
         GameWindow_SetScene(pGameWindow, Title);

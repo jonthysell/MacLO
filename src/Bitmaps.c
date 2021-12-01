@@ -159,12 +159,12 @@ int16_t Bitmaps_GetOverrideBaseResID()
 PicHandle Bitmaps_GetPict(const int16_t baseResID, const int16_t offset)
 {
     PicHandle pic;
-    pic = GetPicture(baseResID + offset);
+    pic = (PicHandle)Get1Resource('PICT', baseResID + offset);
     
     if (pic == nil)
     {
         // No override pic, get default
-        pic = GetPicture(BasePictResID + offset);
+        pic = (PicHandle)Get1Resource('PICT', BasePictResID + offset);
     }
     
     return pic;

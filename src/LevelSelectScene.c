@@ -26,7 +26,6 @@ void LevelSelectScene_Init(GameWindow *pGameWindow)
     GetScaledPicFrame(pGameWindow->Engine.SetB ? pGameWindow->Bitmaps.BCharPict : pGameWindow->Bitmaps.ACharPict, SetTextScale, &(pGameWindow->LevelSelectScene.SetRect));
     
     GetBoxRect(pContentRect, Top, &r);
-    //GetBoxRect(&r, Top, &r);
     CenterRect(&r, &(pGameWindow->LevelSelectScene.SetRect));
     
     // Setup score
@@ -37,21 +36,18 @@ void LevelSelectScene_Init(GameWindow *pGameWindow)
     ConcatenateRect(&(pGameWindow->LevelSelectScene.ScoreRect), &r, &(pGameWindow->LevelSelectScene.ScoreRect));
     
     GetBoxRect(pContentRect, Bottom, &r);
-    //GetBoxRect(&r, Bottom, &r);
     CenterRect(&r, &(pGameWindow->LevelSelectScene.ScoreRect));
     
     // Setup previous button
     GetPictureRect(pGameWindow->Bitmaps.NextButtonPict, &(pGameWindow->LevelSelectScene.PrevButtonRect));
     
     GetBoxRect(pContentRect, BottomLeft, &r);
-    //GetBoxRect(&r, Bottom, &r);
     CenterRect(&r, &(pGameWindow->LevelSelectScene.PrevButtonRect));
     
     // Setup next button
     GetPictureRect(pGameWindow->Bitmaps.NextButtonPict, &(pGameWindow->LevelSelectScene.NextButtonRect));
     
     GetBoxRect(pContentRect, BottomRight, &r);
-    //GetBoxRect(&r, Bottom, &r);
     CenterRect(&r, &(pGameWindow->LevelSelectScene.NextButtonRect));
     
     // Setup LevelGrid

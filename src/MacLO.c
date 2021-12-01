@@ -250,7 +250,7 @@ void MacLO_HandleGameMenuChoice(const int16_t item)
 
 void MacLO_Quit()
 {
-    if (ShowConfirm("\pQuit MacLO?"))
+    if (ShowConfirm("\pAre you sure you want to quit MacLO?"))
     {
         gExitApp = true;
     }

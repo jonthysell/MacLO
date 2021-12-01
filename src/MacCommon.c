@@ -6,7 +6,7 @@
 #define ErrorAlertResID  BaseResID
 #define ConfirmAlertResID (ErrorAlertResID + 1)
 
-#define YesResult 2
+#define ConfirmYesResult 2
 
 const int16_t MonthOffset[] = {
     0,   // Jan
@@ -41,7 +41,7 @@ bool ShowConfirm(Str255 message)
     ParamText(message, EmptyString, EmptyString, EmptyString);
     result = CautionAlert(ConfirmAlertResID, NilFilterProc);
     
-    return result == YesResult;
+    return result == ConfirmYesResult;
 }
 
 void CenterRect(const Rect *pOuterRect, Rect *pInnerRect)

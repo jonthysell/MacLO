@@ -16,19 +16,19 @@ void Sounds_Init(Sounds *pSounds)
 {
     pSounds->Enabled = DefaultEnabled;
     
-    pSounds->ClickSnd = GetResource('snd ', ClickSndResID);
+    pSounds->ClickSnd = Get1Resource('snd ', ClickSndResID);
     if (pSounds->ClickSnd == nil)
     {
         ShowError("\pClick snd resource missing!", true);
     }
     
-    pSounds->RetrySnd = GetResource('snd ', RetrySndResID);
+    pSounds->RetrySnd = Get1Resource('snd ', RetrySndResID);
     if (pSounds->RetrySnd == nil)
     {
         ShowError("\pRetry snd resource missing!", true);
     }
     
-    pSounds->DoneSnd = GetResource('snd ', DoneSndResID);
+    pSounds->DoneSnd = Get1Resource('snd ', DoneSndResID);
     if (pSounds->DoneSnd == nil)
     {
         ShowError("\pDone snd resource missing!", true);

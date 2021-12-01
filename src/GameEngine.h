@@ -32,7 +32,7 @@ void GameEngine_NewGame(GameEngine *pGameEngine, const bool setB);
 
 void GameEngine_ResetGame(GameEngine *pGameEngine);
 
-void GameEngine_StartLevel(GameEngine *pGameEngine, const uint8_t level);
+void GameEngine_StartLevel(GameEngine *pGameEngine, const int8_t level);
 
 void GameEngine_CompleteLevel(GameEngine *pGameEngine);
 
