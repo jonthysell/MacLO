@@ -14,7 +14,9 @@ void TitleScene_Init(GameWindow *pGameWindow)
     
     // Setup Title
     GetPictureRect(pGameWindow->Bitmaps.TitlePict, &(pGameWindow->TitleScene.TitleRect));
-    CenterRect(pContentRect, &(pGameWindow->TitleScene.TitleRect));
+    GetBoxRect(pContentRect, Center, &r);
+    GetBoxRect(&r, Top, &r);
+    CenterRect(&r, &(pGameWindow->TitleScene.TitleRect));
     
     // Setup Set A
     GetScaledPicFrame(pGameWindow->Bitmaps.ACharPict, TitleTextScale, &(pGameWindow->TitleScene.SetARect));
@@ -55,12 +57,12 @@ void TitleScene_Click(GameWindow *pGameWindow, const Point *pPosition)
     if (PtInRect(*pPosition, &(pGameWindow->TitleScene.SetARect)))
     {
         GameEngine_NewGame(&(pGameWindow->Engine), false);
-        GameWindow_SetScene(pGameWindow, Play);
+        GameWindow_SetScene(pGameWindow, LevelSelect);
     }
     else if (PtInRect(*pPosition, &(pGameWindow->TitleScene.SetBRect)))
     {
         GameEngine_NewGame(&(pGameWindow->Engine), true);
-        GameWindow_SetScene(pGameWindow, Play);
+        GameWindow_SetScene(pGameWindow, LevelSelect);
     }
     else if (PtInRect(*pPosition, &(pGameWindow->TitleScene.SoundButtonRect)))
     {

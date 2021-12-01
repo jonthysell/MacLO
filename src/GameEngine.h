@@ -16,7 +16,8 @@ extern const uint16_t PerfectScore;
 
 typedef struct GameEngine
 {
-    uint16_t Score;
+    uint8_t  ScoresA[LevelCount];
+    uint8_t  ScoresB[LevelCount];
     int8_t   Level;
     bool     SetB;
     uint32_t Lights;
@@ -25,7 +26,15 @@ typedef struct GameEngine
     uint16_t Moves;
 } GameEngine;
 
+void GameEngine_Init(GameEngine *pGameEngine);
+
 void GameEngine_NewGame(GameEngine *pGameEngine, const bool setB);
+
+void GameEngine_ResetGame(GameEngine *pGameEngine);
+
+void GameEngine_StartLevel(GameEngine *pGameEngine, const uint8_t level);
+
+void GameEngine_CompleteLevel(GameEngine *pGameEngine);
 
 void GameEngine_NextLevel(GameEngine *pGameEngine);
 
@@ -35,9 +44,15 @@ bool GameEngine_GetLight(const GameEngine *pGameEngine, const int8_t x, const in
 
 bool GameEngine_IsCompleted(const GameEngine *pGameEngine);
 
+bool GameEngine_IsEnabled(const GameEngine *pGameEngine, const int8_t level);
+
 bool GameEngine_IsGameOver(const GameEngine *pGameEngine);
 
 uint8_t GameEngine_GetHalfStars(const GameEngine *pGameEngine);
+
+uint8_t GameEngine_GetScore(const GameEngine *pGameEngine, const int8_t level);
+
+uint16_t GameEngine_GetTotalScore(const GameEngine *pGameEngine);
 
 void GameEngine_ToggleLights(GameEngine *pGameEngine, const int8_t x, const int8_t y);
 

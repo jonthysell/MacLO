@@ -16,6 +16,8 @@
 #define HalfStarScale  2
 #define ScoreTextScale 1
 
+void PlayScene_SetLightRect(const GameWindow *pGameWindow, Rect *pRect, const int8_t c, const int8_t r);
+
 void PlayScene_Init(GameWindow *pGameWindow)
 {
     Rect r;
@@ -49,7 +51,7 @@ void PlayScene_Init(GameWindow *pGameWindow)
     CenterRect(&r, &(pGameWindow->PlayScene.HalfStarsRect));
     
     // Setup score
-    Bitmaps_GetNumberRect(&(pGameWindow->Bitmaps), pGameWindow->Engine.Score, ScoreTextScale, &(pGameWindow->PlayScene.ScoreRect));
+    Bitmaps_GetNumberRect(&(pGameWindow->Bitmaps), GameEngine_GetTotalScore(&(pGameWindow->Engine)), ScoreTextScale, &(pGameWindow->PlayScene.ScoreRect));
     GetScaledPicFrame(pGameWindow->Bitmaps.SlashCharPict, ScoreTextScale, &r);
     ConcatenateRect(&(pGameWindow->PlayScene.ScoreRect), &r, &(pGameWindow->PlayScene.ScoreRect));
     Bitmaps_GetNumberRect(&(pGameWindow->Bitmaps), PerfectScore, ScoreTextScale, &r);
@@ -144,7 +146,7 @@ void PlayScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
     if (fullRefresh)
     {
         MoveTo(pGameWindow->PlayScene.ScoreRect.left, pGameWindow->PlayScene.ScoreRect.top);
-        Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), pGameWindow->Engine.Score, ScoreTextScale);
+        Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), GameEngine_GetTotalScore(&(pGameWindow->Engine)), ScoreTextScale);
         Bitmaps_DrawSlashChar(&(pGameWindow->Bitmaps), ScoreTextScale);
         Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), PerfectScore, ScoreTextScale);
     }
@@ -187,6 +189,7 @@ void PlayScene_Click(GameWindow *pGameWindow, const Point *pPosition)
         if (GameEngine_IsCompleted(&(pGameWindow->Engine)))
         {
             // Level was completed in the last click
+            GameEngine_CompleteLevel(&(pGameWindow->Engine));
             GameWindow_Draw(pGameWindow, false);
             GameWindow_SetScene(pGameWindow, LevelEnd);
             Sounds_PlayDoneSnd(&(pGameWindow->Sounds));

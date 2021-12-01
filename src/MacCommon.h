@@ -12,8 +12,6 @@
 #define EmptyString     "\p"
 #define NilFilterProc   nil
 
-#define ErrorAlertResID BaseResID
-
 extern const int16_t MonthOffset[];
 
 typedef enum eBoxAlignment
@@ -32,6 +30,8 @@ typedef enum eBoxAlignment
 pascal OSErr SetDialogDefaultItem(DialogPtr theDialog, int16_t newItem) = { 0x303C, 0x0304, 0xAA68 };
 
 void ShowError(Str255 message, bool isFatal);
+
+bool ShowConfirm(Str255 message);
 
 void CenterRect(const Rect *pOuterRect, Rect *pInnerRect);
 void CenterRectH(const Rect *pOuterRect, Rect *pInnerRect);

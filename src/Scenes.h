@@ -9,6 +9,7 @@
 typedef enum eSceneId
 {
     Title,
+    LevelSelect,
     Play,
     LevelEnd,
     GameEnd
@@ -21,6 +22,16 @@ typedef struct sTitleScene
     Rect SetBRect;
     Rect SoundButtonRect;
 } TitleScene;
+
+typedef struct sLevelSelectScene
+{
+    int8_t PageNumber;
+    Rect   SetRect;
+    Rect   ScoreRect;
+    Rect   PrevButtonRect;
+    Rect   NextButtonRect;
+    Rect   LevelGridRect;
+} LevelSelectScene;
 
 typedef struct sPlayScene
 {

@@ -8,8 +8,9 @@
 #define AboutMenuItemID    1
 
 #define GameMenuResID      BaseResID+1
-#define NewMenuItemID      1
-#define QuitMenuItemID     3
+#define TitleMenuItemID    1
+#define ClearMenuItemID    2
+#define QuitMenuItemID     4
 
 #define AboutDialogResID   BaseResID
 #define AboutDialogOKID    1
@@ -28,6 +29,8 @@ void MacLO_ShowAboutDialog();
 void MacLO_LaunchAppleMenuItem(const int16_t item);
 
 void MacLO_HandleGameMenuChoice(const int16_t item);
+
+void MacLO_Quit();
 
 void MacLO_ToolBoxInit()
 {
@@ -233,11 +236,22 @@ void MacLO_HandleGameMenuChoice(const int16_t item)
 {
     switch (item)
     {
-        case NewMenuItemID:
+        case TitleMenuItemID:
             GameWindow_SetScene(&gGameWindow, Title);
             break;
-        case QuitMenuItemID:
-            gExitApp = true;
+        case ClearMenuItemID:
+            GameWindow_ClearScores(&gGameWindow);
             break;
+        case QuitMenuItemID:
+            MacLO_Quit();
+            break;
+    }
+}
+
+void MacLO_Quit()
+{
+    if (ShowConfirm("\pQuit MacLO?"))
+    {
+        gExitApp = true;
     }
 }

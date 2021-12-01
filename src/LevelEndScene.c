@@ -28,7 +28,7 @@ void LevelEndScene_Init(GameWindow *pGameWindow)
     CenterRect(&r, &(pGameWindow->LevelEndScene.HalfStarsRect));
     
     // Setup score
-    Bitmaps_GetNumberRect(&(pGameWindow->Bitmaps), pGameWindow->Engine.Score, ScoreTextScale, &(pGameWindow->LevelEndScene.ScoreRect));
+    Bitmaps_GetNumberRect(&(pGameWindow->Bitmaps), GameEngine_GetTotalScore(&(pGameWindow->Engine)), ScoreTextScale, &(pGameWindow->LevelEndScene.ScoreRect));
     GetScaledPicFrame(pGameWindow->Bitmaps.SlashCharPict, ScoreTextScale, &r);
     ConcatenateRect(&(pGameWindow->LevelEndScene.ScoreRect), &r, &(pGameWindow->LevelEndScene.ScoreRect));
     Bitmaps_GetNumberRect(&(pGameWindow->Bitmaps), PerfectScore, ScoreTextScale, &r);
@@ -70,7 +70,7 @@ void LevelEndScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
     
     // Draw score
     MoveTo(pGameWindow->LevelEndScene.ScoreRect.left, pGameWindow->LevelEndScene.ScoreRect.top);
-    Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), pGameWindow->Engine.Score, ScoreTextScale);
+    Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), GameEngine_GetTotalScore(&(pGameWindow->Engine)), ScoreTextScale);
     Bitmaps_DrawSlashChar(&(pGameWindow->Bitmaps), ScoreTextScale);
     Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), PerfectScore, ScoreTextScale);
     

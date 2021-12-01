@@ -13,7 +13,8 @@
 #define BCharPictResID       (ACharPictResID + 1)
 #define SlashCharPictResID   (BCharPictResID + 1)
 #define StarPictBaseResID    (SlashCharPictResID + 1)
-#define NextButtonPictResID  (StarPictBaseResID + StarPictCount)
+#define PrevButtonPictResID  (StarPictBaseResID + StarPictCount)
+#define NextButtonPictResID  (PrevButtonPictResID + 1)
 #define RetryButtonPictResID (NextButtonPictResID + 1)
 #define SoundOffPictResID    (RetryButtonPictResID + 1)
 #define SoundOnPictResID     (SoundOffPictResID + 1)
@@ -87,6 +88,13 @@ void Bitmaps_Init(Bitmaps *pBitmaps)
     if (pBitmaps->SlashCharPict == nil)
     {
         ShowError("\pSlash char PICT resource missing!", true);
+    }
+    
+    // Load prev button
+    pBitmaps->PrevButtonPict = Bitmaps_GetPict(baseResID, PrevButtonPictResID);
+    if (pBitmaps->PrevButtonPict == nil)
+    {
+        ShowError("\pPrev button PICT resource missing!", true);
     }
     
     // Load next button

@@ -7,7 +7,7 @@
 #include "stdint.h"
 #include "stdbool.h"
 
-extern const int8_t LevelCount;
+#define LevelCount 50
 
 uint32_t Levels_GetLightsForLevel(const int8_t level, const bool setB);
 

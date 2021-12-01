@@ -23,7 +23,7 @@ void GameEndScene_Init(GameWindow *pGameWindow)
     CenterRect(&r, &(pGameWindow->GameEndScene.SetRect));
     
     // Setup score
-    Bitmaps_GetNumberRect(&(pGameWindow->Bitmaps), pGameWindow->Engine.Score, ScoreTextScale, &(pGameWindow->GameEndScene.ScoreRect));
+    Bitmaps_GetNumberRect(&(pGameWindow->Bitmaps), GameEngine_GetTotalScore(&(pGameWindow->Engine)), ScoreTextScale, &(pGameWindow->GameEndScene.ScoreRect));
     GetScaledPicFrame(pGameWindow->Bitmaps.SlashCharPict, ScoreTextScale, &r);
     ConcatenateRect(&(pGameWindow->GameEndScene.ScoreRect), &r, &(pGameWindow->GameEndScene.ScoreRect));
     Bitmaps_GetNumberRect(&(pGameWindow->Bitmaps), PerfectScore, ScoreTextScale, &r);
@@ -51,7 +51,7 @@ void GameEndScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
     
     // Draw score
     MoveTo(pGameWindow->GameEndScene.ScoreRect.left, pGameWindow->GameEndScene.ScoreRect.top);
-    Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), pGameWindow->Engine.Score, ScoreTextScale);
+    Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), GameEngine_GetTotalScore(&(pGameWindow->Engine)), ScoreTextScale);
     Bitmaps_DrawSlashChar(&(pGameWindow->Bitmaps), ScoreTextScale);
     Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), PerfectScore, ScoreTextScale);
 }

@@ -17,6 +17,7 @@ typedef struct sBitmaps
     PicHandle BCharPict;
     PicHandle SlashCharPict;
     PicHandle StarPicts[StarPictCount];
+    PicHandle PrevButtonPict;
     PicHandle NextButtonPict;
     PicHandle RetryButtonPict;
     PicHandle SoundOffPict;

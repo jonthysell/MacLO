@@ -3,6 +3,7 @@
 
 #include "GameWindow.h"
 #include "TitleScene.h"
+#include "LevelSelectScene.h"
 #include "PlayScene.h"
 #include "LevelEndScene.h"
 #include "GameEndScene.h"
@@ -21,14 +22,17 @@ void GameWindow_Init(GameWindow *pGameWindow)
         ShowError("\pGameWindow WIND resource missing!", true);
     }
     
+    // Initialize window buffer
+    WindowBuffer_Init(&(pGameWindow->WindowBuffer), pGameWindow->Window);
+    
+    // Initialize game engine
+    GameEngine_Init(&(pGameWindow->Engine));
+    
     // Load PICT resources
     Bitmaps_Init(&(pGameWindow->Bitmaps));
     
     // Load snd resources
     Sounds_Init(&(pGameWindow->Sounds));
-    
-    // Initialize window buffer
-    WindowBuffer_Init(&(pGameWindow->WindowBuffer), pGameWindow->Window);
     
     // Setup graphics before first draw
     SetPort(pGameWindow->Window);
@@ -58,6 +62,9 @@ void GameWindow_Draw(const GameWindow *pGameWindow, bool fullRefresh)
         case Title:
             TitleScene_Draw(pGameWindow, fullRefresh);
             break;
+        case LevelSelect:
+            LevelSelectScene_Draw(pGameWindow, fullRefresh);
+            break;
         case Play:
             PlayScene_Draw(pGameWindow, fullRefresh);
             break;
@@ -81,6 +88,9 @@ void GameWindow_Click(GameWindow *pGameWindow, const Point *pPosition)
         case Title:
             TitleScene_Click(pGameWindow, pPosition);
             break;
+        case LevelSelect:
+            LevelSelectScene_Click(pGameWindow, pPosition);
+            break;
         case Play:
             PlayScene_Click(pGameWindow, pPosition);
             break;
@@ -100,6 +110,9 @@ void GameWindow_SetScene(GameWindow *pGameWindow, const SceneId sceneId)
         case Title:
             TitleScene_Init(pGameWindow);
             break;
+        case LevelSelect:
+            LevelSelectScene_Init(pGameWindow);
+            break;
         case Play:
             PlayScene_Init(pGameWindow);
             break;
@@ -118,4 +131,13 @@ void GameWindow_SetScene(GameWindow *pGameWindow, const SceneId sceneId)
 void GameWindow_Show(const GameWindow *pGameWindow)
 {
     ShowWindow(pGameWindow->Window);
+}
+
+void GameWindow_ClearScores(GameWindow *pGameWindow)
+{
+    if (ShowConfirm("\pClear all scores?"))
+    {
+        GameEngine_ResetGame(&(pGameWindow->Engine));
+        GameWindow_SetScene(pGameWindow, Title);
+    }
 }

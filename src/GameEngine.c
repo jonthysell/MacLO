@@ -16,24 +16,73 @@ void GameEngine_LoadLevel(GameEngine *pGameEngine, const int8_t level, const boo
 uint8_t GameEngine_CalculateHalfStars(const uint16_t par, const uint16_t moves);
 void GameEngine_ToggleSingleLight(GameEngine *pGameEngine, const int8_t x, const int8_t y);
 
+void GameEngine_Init(GameEngine *pGameEngine)
+{
+    int8_t level;
+    
+    for (level = 0; level < LevelCount; level++)
+    {
+        // TODO: Load actual scores
+        pGameEngine->ScoresA[level] = 1;
+        pGameEngine->ScoresB[level] = 0;
+    }
+    
+    pGameEngine->Level = -1;
+    pGameEngine->SetB = false;
+    pGameEngine->PreviousLights = 0;
+    pGameEngine->Lights = 0;
+    pGameEngine->Par = 0;
+    pGameEngine->Moves = 0;
+}
+
 void GameEngine_NewGame(GameEngine *pGameEngine, const bool setB)
 {
-    pGameEngine->Score = 0;
-    GameEngine_LoadLevel(pGameEngine, 0, setB);
+    pGameEngine->SetB = setB;
+    GameEngine_StartLevel(pGameEngine, 0);
+}
+
+void GameEngine_ResetGame(GameEngine *pGameEngine)
+{
+    int8_t level;
+    
+    for (level = 0; level < LevelCount; level++)
+    {
+        pGameEngine->ScoresA[level] = 0;
+        pGameEngine->ScoresB[level] = 0;
+    }
+}
+
+void GameEngine_StartLevel(GameEngine *pGameEngine, const uint8_t level)
+{
+    GameEngine_LoadLevel(pGameEngine, level, pGameEngine->SetB);
+}
+
+void GameEngine_CompleteLevel(GameEngine *pGameEngine)
+{
+    if (GameEngine_IsCompleted(pGameEngine))
+    {
+        if (pGameEngine->SetB)
+        {
+            pGameEngine->ScoresB[pGameEngine->Level] = max(GameEngine_GetHalfStars(pGameEngine), pGameEngine->ScoresB[pGameEngine->Level]);
+        }
+        else
+        {
+            pGameEngine->ScoresA[pGameEngine->Level] = max(GameEngine_GetHalfStars(pGameEngine), pGameEngine->ScoresA[pGameEngine->Level]);
+        }
+    }
 }
 
 void GameEngine_NextLevel(GameEngine *pGameEngine)
 {
     if (GameEngine_IsCompleted(pGameEngine))
     {
-        pGameEngine->Score += GameEngine_GetHalfStars(pGameEngine);
-        GameEngine_LoadLevel(pGameEngine, pGameEngine->Level + 1, pGameEngine->SetB);
+        GameEngine_StartLevel(pGameEngine, pGameEngine->Level + 1);
     }
 }
 
 void GameEngine_ResetLevel(GameEngine *pGameEngine)
 {
-    GameEngine_LoadLevel(pGameEngine, pGameEngine->Level, pGameEngine->SetB);
+    GameEngine_StartLevel(pGameEngine, pGameEngine->Level);
 }
 
 void GameEngine_LoadLevel(GameEngine *pGameEngine, const int8_t level, const bool setB)
@@ -56,6 +105,11 @@ bool GameEngine_GetLight(const GameEngine *pGameEngine, const int8_t x, const in
     return false;
 }
 
+bool GameEngine_IsEnabled(const GameEngine *pGameEngine, const int8_t level)
+{
+    return level == 0 || (level < LevelCount && GameEngine_GetScore(pGameEngine, level - 1) > 0);
+}
+
 bool GameEngine_IsCompleted(const GameEngine *pGameEngine)
 {
     return pGameEngine->Lights == 0;
@@ -69,6 +123,25 @@ bool GameEngine_IsGameOver(const GameEngine *pGameEngine)
 uint8_t GameEngine_GetHalfStars(const GameEngine *pGameEngine)
 {
     return GameEngine_CalculateHalfStars(pGameEngine->Par, pGameEngine->Moves);
+}
+
+uint8_t GameEngine_GetScore(const GameEngine *pGameEngine, const int8_t level)
+{
+    return pGameEngine->SetB ? pGameEngine->ScoresB[level] : pGameEngine->ScoresA[level];
+}
+
+uint16_t GameEngine_GetTotalScore(const GameEngine *pGameEngine)
+{
+    uint8_t level;
+    uint16_t score;
+    
+    score = 0;
+    for (level = 0; level < LevelCount; level++)
+    {
+        score += GameEngine_GetScore(pGameEngine, level);
+    }
+    
+    return score;
 }
 
 uint8_t GameEngine_CalculateHalfStars(const uint16_t par, const uint16_t moves)

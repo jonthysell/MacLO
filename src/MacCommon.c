@@ -3,6 +3,11 @@
 
 #include "MacCommon.h"
 
+#define ErrorAlertResID  BaseResID
+#define ConfirmAlertResID (ErrorAlertResID + 1)
+
+#define YesResult 2
+
 const int16_t MonthOffset[] = {
     0,   // Jan
     31,  // Feb
@@ -27,6 +32,16 @@ void ShowError(Str255 message, bool isFatal)
     {
         ExitToShell();
     }
+}
+
+bool ShowConfirm(Str255 message)
+{
+    uint16_t result;
+    
+    ParamText(message, EmptyString, EmptyString, EmptyString);
+    result = CautionAlert(ConfirmAlertResID, NilFilterProc);
+    
+    return result == YesResult;
 }
 
 void CenterRect(const Rect *pOuterRect, Rect *pInnerRect)
