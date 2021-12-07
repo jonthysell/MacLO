@@ -29,7 +29,7 @@ void TitleScene_Init(GameWindow *pGameWindow)
     CenterRect(&r, &(pGameWindow->TitleScene.SetBRect));
     
     // Setup sound button
-    Bitmaps_GetSoundRect(&(pGameWindow->Bitmaps), pGameWindow->Sounds.Enabled, TitleTextScale, &(pGameWindow->TitleScene.SoundButtonRect));
+    Bitmaps_GetSoundRect(&(pGameWindow->Bitmaps), TitleTextScale, &(pGameWindow->TitleScene.SoundButtonRect));
     GetBoxRect(pContentRect, Bottom, &r);
     CenterRect(&r, &(pGameWindow->TitleScene.SoundButtonRect));
 }

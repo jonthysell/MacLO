@@ -45,7 +45,7 @@ void PlayScene_Init(GameWindow *pGameWindow)
     CenterRect(&r, &(pGameWindow->PlayScene.LevelRect));
 
     // Setup half-stars
-    Bitmaps_GetHalfStarsRect(&(pGameWindow->Bitmaps), GameEngine_GetHalfStars(&(pGameWindow->Engine)), MaxStars, HalfStarScale, &(pGameWindow->PlayScene.HalfStarsRect));
+    Bitmaps_GetHalfStarsRect(&(pGameWindow->Bitmaps), MaxStars, HalfStarScale, &(pGameWindow->PlayScene.HalfStarsRect));
     
     GetBoxRect(&(pGameWindow->PlayScene.HUDRect), Center, &r);
     CenterRect(&r, &(pGameWindow->PlayScene.HalfStarsRect));
@@ -67,7 +67,7 @@ void PlayScene_Init(GameWindow *pGameWindow)
     CenterRect(&r, &(pGameWindow->PlayScene.RetryButtonRect));
     
     // Setup sound button
-    Bitmaps_GetSoundRect(&(pGameWindow->Bitmaps), pGameWindow->Sounds.Enabled, 1, &(pGameWindow->PlayScene.SoundButtonRect));
+    Bitmaps_GetSoundRect(&(pGameWindow->Bitmaps), 1, &(pGameWindow->PlayScene.SoundButtonRect));
     GetBoxRect(&(pGameWindow->PlayScene.HUDRect), BottomRight, &r);
     CenterRect(&r, &(pGameWindow->PlayScene.SoundButtonRect));
 }

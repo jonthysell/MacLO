@@ -1,11 +1,20 @@
 // Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
+/**
+ * @file Scenes.h
+ *
+ * This file provides a variety of scene-specific types which contain the
+ * data that those scenes require to render properly.
+ */
+
 #ifndef SCENES_H
 #define SCENES_H
 
-#define NumScenes 4
+/** The total number of scenes. */
+#define NumScenes 5
 
+/** Enum defining unique IDs for each scene. */
 typedef enum eSceneId
 {
     Title,
@@ -15,6 +24,7 @@ typedef enum eSceneId
     GameEnd
 } SceneId;
 
+/** Struct containing data needed for the Title scene. */
 typedef struct sTitleScene
 {
     Rect TitleRect;
@@ -23,6 +33,7 @@ typedef struct sTitleScene
     Rect SoundButtonRect;
 } TitleScene;
 
+/** Struct containing data needed for the LevelSelect scene. */
 typedef struct sLevelSelectScene
 {
     int8_t PageNumber;
@@ -33,6 +44,7 @@ typedef struct sLevelSelectScene
     Rect   LevelGridRect;
 } LevelSelectScene;
 
+/** Struct containing data needed for the Play scene. */
 typedef struct sPlayScene
 {
     Rect PlayfieldRect;
@@ -44,6 +56,7 @@ typedef struct sPlayScene
     Rect SoundButtonRect;
 } PlayScene;
 
+/** Struct containing data needed for the LevelEnd scene. */
 typedef struct sLevelEndScene
 {
     Rect LevelRect;
@@ -53,6 +66,7 @@ typedef struct sLevelEndScene
     Rect NextButtonRect;
 } LevelEndScene;
 
+/** Struct containing data needed for the GameEnd scene. */
 typedef struct sGameEndScene
 {
     Rect SetRect;

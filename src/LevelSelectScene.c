@@ -141,7 +141,7 @@ void LevelSelectScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
             if (GameEngine_IsEnabled(&(pGameWindow->Engine), level))
             {
                 // Draw half-stars
-                Bitmaps_GetHalfStarsRect(&(pGameWindow->Bitmaps), GameEngine_GetScore(&(pGameWindow->Engine), level), MaxStars, LevelTextScale, &levelHalfStarsRect);
+                Bitmaps_GetHalfStarsRect(&(pGameWindow->Bitmaps), MaxStars, LevelTextScale, &levelHalfStarsRect);
         
                 GetBoxRect(&levelRect, Bottom, &r);
                 GetBoxRect(&r, Top, &r);

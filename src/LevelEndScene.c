@@ -22,7 +22,7 @@ void LevelEndScene_Init(GameWindow *pGameWindow)
     CenterRect(&r, &(pGameWindow->LevelEndScene.LevelRect));
 
     // Setup half-stars
-    Bitmaps_GetHalfStarsRect(&(pGameWindow->Bitmaps), GameEngine_GetHalfStars(&(pGameWindow->Engine)), MaxStars, HalfStarScale, &(pGameWindow->LevelEndScene.HalfStarsRect));
+    Bitmaps_GetHalfStarsRect(&(pGameWindow->Bitmaps), MaxStars, HalfStarScale, &(pGameWindow->LevelEndScene.HalfStarsRect));
     
     GetBoxRect(pContentRect, Center, &r);
     CenterRect(&r, &(pGameWindow->LevelEndScene.HalfStarsRect));

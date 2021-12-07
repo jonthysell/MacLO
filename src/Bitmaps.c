@@ -25,6 +25,21 @@
 
 #define StarRectPadding      2
 
+const int16_t MonthOffset[] = {
+    0,   // Jan
+    31,  // Feb
+    60,  // Mar
+    91,  // Apr
+    121, // May
+    152, // Jun
+    182, // Jul
+    213, // Aug
+    244, // Sep
+    274, // Oct
+    305, // Nov
+    335, // Dec
+};
+
 int16_t Bitmaps_GetOverrideBaseResID();
 
 PicHandle Bitmaps_GetPict(const int16_t holidayResID, const int16_t offset);
@@ -247,7 +262,7 @@ void Bitmaps_DrawSlashChar(const Bitmaps *pBitmaps, const uint8_t scale)
     DrawScaledPic(pBitmaps->SlashCharPict, scale);
 }
 
-void Bitmaps_GetHalfStarsRect(const Bitmaps *pBitmaps, const uint8_t halfStars, const uint8_t maxStars, const uint8_t scale, Rect *pDestRect)
+void Bitmaps_GetHalfStarsRect(const Bitmaps *pBitmaps, const uint8_t maxStars, const uint8_t scale, Rect *pDestRect)
 {
     uint8_t stars;
     Rect starRect, paddingRect;
@@ -303,7 +318,7 @@ void Bitmaps_DrawHalfStars(const Bitmaps *pBitmaps, const uint8_t halfStars, con
     }
 }
 
-void Bitmaps_GetSoundRect(const Bitmaps *pBitmaps, const bool enabled, const uint8_t scale, Rect *pDestRect)
+void Bitmaps_GetSoundRect(const Bitmaps *pBitmaps, const uint8_t scale, Rect *pDestRect)
 {
     Rect r;
     
