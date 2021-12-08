@@ -1,30 +1,65 @@
 // Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
+/**
+ * @file Bitmaps.c
+ *
+ * This file provides implementations for Bitmaps.h.
+ */
+
 #include <OSUtils.h>
 
 #include "Bitmaps.h"
 
+/** The first PICT resource ID. */
 #define BasePictResID        BaseResID
 
+/** Index of the title PICT resource ID. */
 #define TitlePictResID       0
+
+/** Starting index of the number character PICT resource IDs. */
 #define NumCharPictBaseResID (TitlePictResID + 1)
+
+/** Index of the A character PICT resource ID. */
 #define ACharPictResID       (NumCharPictBaseResID + NumCharPictCount)
+
+/** Index of the B character PICT resource ID. */
 #define BCharPictResID       (ACharPictResID + 1)
+
+/** Index of the / character PICT resource ID. */
 #define SlashCharPictResID   (BCharPictResID + 1)
+
+/** Starting index of the star PICT resource IDs. */
 #define StarPictBaseResID    (SlashCharPictResID + 1)
+
+/** Index of the previous button PICT resource ID. */
 #define PrevButtonPictResID  (StarPictBaseResID + StarPictCount)
+
+/** Index of the next button PICT resource ID. */
 #define NextButtonPictResID  (PrevButtonPictResID + 1)
+
+/** Index of the retry button PICT resource ID. */
 #define RetryButtonPictResID (NextButtonPictResID + 1)
+
+/** Index of the sound off PICT resource ID. */
 #define SoundOffPictResID    (RetryButtonPictResID + 1)
+
+/** Index of the sound on PICT resource ID. */
 #define SoundOnPictResID     (SoundOffPictResID + 1)
+
+/** Index of the light off PICT resource ID. */
 #define LightOffPictResID    (SoundOnPictResID + 1)
+
+/** Index of the light on PICT resource ID. */
 #define LightOnPictResID     (LightOffPictResID + 1)
 
+/** The total number of PICT resources. */
 #define TotalPictCount       (LightOnPictResID + 1)
 
+/** Amount of padding to place between star PICTs. */
 #define StarRectPadding      2
 
+/** Mapping of months to the day of the year of their first day. */
 const int16_t MonthOffset[] = {
     0,   // Jan
     31,  // Feb
@@ -40,9 +75,19 @@ const int16_t MonthOffset[] = {
     335, // Dec
 };
 
+/**
+ * Gets the override base resource ID.
+ * @return The base resource ID.
+ */
 int16_t Bitmaps_GetOverrideBaseResID();
 
-PicHandle Bitmaps_GetPict(const int16_t holidayResID, const int16_t offset);
+/**
+ * Gets the PICT specified by the base resource ID and given offset.
+ * @param baseResID The base resource ID.
+ * @param offset The offset.
+ * @return The PICT resource.
+ */
+PicHandle Bitmaps_GetPict(const int16_t baseResID, const int16_t offset);
 
 void Bitmaps_Init(Bitmaps *pBitmaps)
 {

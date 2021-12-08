@@ -1,18 +1,48 @@
 // Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
+/**
+ * @file LevelSelectScene.c
+ *
+ * This file provides implementations for LevelSelectScene.h.
+ */
+
 #include "LevelSelectScene.h"
 
+/** Scale factor for the A/B set text. */
 #define SetTextScale   3
+
+/** Scale factor for the score text. */
 #define ScoreTextScale 1
 
+/** Margin for each level selection. */
 #define LevelMargin         10
+
+/** Width for each level selection. */
 #define LevelWidth          80
+
+/** Height for each level selection. */
 #define LevelHeight         60
+
+/** The number of rows of levels to show. */
 #define LevelRowCount       2
+
+/** The number of columns of levels to show. */
 #define LevelColumnCount    5
+
+/** The total number of levels to show per page.  */
 #define LevelsPerPage       (LevelRowCount * LevelColumnCount)
+
+/** Scale factor for the level text. */
 #define LevelTextScale      1
+
+/**
+ * Gets the Rect of the level selection at the given index.
+ * @param pGameWindow The GameWindow.
+ * @param pRect. The Rect of the level selection.
+ * @param i The index of the level onscreen.
+ */
+void LevelSelectScene_SetLevelRect(const GameWindow *pGameWindow, Rect *pRect, const int8_t i);
 
 void LevelSelectScene_Init(GameWindow *pGameWindow)
 {

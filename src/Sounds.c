@@ -1,15 +1,30 @@
 // Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
+/**
+ * @file Sounds.c
+ *
+ * This file provides implementations for Sounds.h.
+ */
+
 #include "Sounds.h"
 
+/** The first snd resource ID. */
 #define SndBaseResId  8192
 
+/** The click snd resource ID. */
 #define ClickSndResID SndBaseResId
+
+/** The retry snd resource ID. */
 #define RetrySndResID (ClickSndResID + 1)
+
+/** The done snd resource ID. */
 #define DoneSndResID  (RetrySndResID + 1)
 
+/** Whether or not sound is enabled by default. */
 #define DefaultEnabled  true
+
+/** Whether or not to play sound async. */
 #define PlaySoundsAsync false
 
 void Sounds_Init(Sounds *pSounds)

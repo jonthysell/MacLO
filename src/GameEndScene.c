@@ -1,9 +1,18 @@
 // Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
+/**
+ * @file GameEndScene.c
+ *
+ * This file provides implementations for GameEndScene.h.
+ */
+
 #include "GameEndScene.h"
 
+/** Scale factor for the A/B set text. */
 #define SetTextScale   6
+
+/** Scale factor for the score text. */
 #define ScoreTextScale 3
 
 void GameEndScene_Init(GameWindow *pGameWindow)

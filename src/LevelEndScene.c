@@ -1,10 +1,21 @@
 // Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
+/**
+ * @file LevelEndScene.c
+ *
+ * This file provides implementations for LevelEndScene.h.
+ */
+
 #include "LevelEndScene.h"
 
+/** Scale factor for the level text. */
 #define LevelTextScale 4
+
+/** Scale factor for the stars. */
 #define HalfStarScale  3
+
+/** Scale factor for score text. */
 #define ScoreTextScale 1
 
 void LevelEndScene_Init(GameWindow *pGameWindow)

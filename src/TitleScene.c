@@ -1,9 +1,16 @@
 // Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
+/**
+ * @file TitleScene.c
+ *
+ * This file provides implementations for TitleScene.h.
+ */
+
 #include "TitleScene.h"
 #include "Bitmaps.h"
 
+/** Scale factor for the text. */
 #define TitleTextScale 2
 
 void TitleScene_Init(GameWindow *pGameWindow)

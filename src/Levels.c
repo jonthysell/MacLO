@@ -1,9 +1,16 @@
 // Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
+/**
+ * @file Levels.c
+ *
+ * This file provides implementations for Levels.h.
+ */
+
 #include "Common.h"
 #include "Levels.h"
 
+/** The levels from Set A, stored in 32-bit integers. */
 const uint32_t Levels_LightsA[] = {
     0x0005400UL, 0x15A82B5UL, 0x0ADEF6AUL, 0x1B88360UL, 0x1BC5EEFUL, 0x0EAD400UL, 0x0F8C62FUL, 0x0AAA880UL, 0x07D3BEAUL,
     0x00039CEUL, 0x0EAD6B5UL, 0x0A76D5FUL, 0x022AA88UL, 0x0210800UL, 0x0010040UL, 0x1F08421UL, 0x1F71000UL, 0x0455544UL,
@@ -13,6 +20,7 @@ const uint32_t Levels_LightsA[] = {
     0x0477DC4UL, 0x10917E4UL, 0x0089220UL, 0x1151151UL, 0x1FFFFFFUL,
 };
 
+/** The levels from Set B, stored in 32-bit integers. */
 const uint32_t Levels_LightsB[] = {
     0x1B06C1BUL, 0x1F2009FUL, 0x1F5115FUL, 0x11D822AUL, 0x0466CC4UL, 0x0AFD7EAUL, 0x158EE35UL, 0x0013800UL, 0x0531110UL,
     0x11AC6A0UL, 0x1F739DFUL, 0x1150151UL, 0x0E4394EUL, 0x093BD2FUL, 0x0EAD6B5UL, 0x0E4384EUL, 0x1F8D63FUL, 0x1505415UL,

@@ -1,21 +1,48 @@
 // Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
+/**
+ * @file PlayScene.c
+ *
+ * This file provides implementations for PlayScene.h.
+ */
+
 #include "PlayScene.h"
 
+/** Margin around the Playfield area. */
 #define PlayfieldMargin     4
-#define PlayfieldPadding    2
-#define PlayfieldCornerSize 12
-#define LightMargin         6
-#define LightSize           50
-#define LightCornerSize     12
 
+/** Padding within the Playfield area. */
+#define PlayfieldPadding    2
+
+/** Corner size of the Playfield area. */
+#define PlayfieldCornerSize 12
+
+/** Margin around each light. */
+#define LightMargin         6
+
+/** Size (width and height) of each light. */
+#define LightSize           50
+
+/** Margin around the HUD area. */
 #define HUDMargin PlayfieldMargin
 
+/** Scale factor for the level text. */
 #define LevelTextScale 3
+
+/** Scale factor for the stars. */
 #define HalfStarScale  2
+
+/** Scale factor for the score text. */
 #define ScoreTextScale 1
 
+/**
+ * Gets the Rect of the light at the given coordinates.
+ * @param pGameWindow The GameWindow.
+ * @param pRect. The Rect of the light.
+ * @param c The column.
+ * @param r The row.
+ */
 void PlayScene_SetLightRect(const GameWindow *pGameWindow, Rect *pRect, const int8_t c, const int8_t r);
 
 void PlayScene_Init(GameWindow *pGameWindow)

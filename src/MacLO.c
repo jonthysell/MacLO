@@ -1,35 +1,95 @@
 // Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
+/**
+ * @file MacLO.c
+ *
+ * This file provides implementations for MacLO.h.
+ */
+
 #include "GameWindow.h"
 #include "MacLO.h"
 
+/** Resource ID for the apple menu. */
 #define AppleMenuResID     BaseResID
+
+/** Resource ID for the about menu item. */
 #define AboutMenuItemID    1
 
+/** Resource ID for the game menu. */
 #define GameMenuResID      BaseResID+1
+
+/** Resource ID for the title menu id. */
 #define TitleMenuItemID    1
+
+/** Resource ID for the clear menu id. */
 #define ClearMenuItemID    2
+
+/** Resource ID for the quit menu id. */
 #define QuitMenuItemID     4
 
+/** Resource ID for the about dialog. */
 #define AboutDialogResID   BaseResID
+
+/** Resource ID for the about dialog's ok button. */
 #define AboutDialogOKID    1
 
+/** GameWindow global instance. */
 GameWindow gGameWindow;
-Boolean gExitApp;
 
+/** Bool to signal that the app should exit. */
+bool gExitApp;
+
+/**
+ * Processes the update event with the given EventRecord.
+ * @param pEvent The EventRecord. 
+ */
 void MacLO_HandleUpdate(const EventRecord *pEvent);
+
+/**
+ * Processes the mouse down event with the given EventRecord.
+ * @param pEvent The EventRecord. 
+ */
 void MacLO_HandleMouseDown(const EventRecord *pEvent);
+
+/**
+ * Processes the mouse up event with the given EventRecord.
+ * @param pEvent The EventRecord. 
+ */
 void MacLO_HandleMouseUp(const EventRecord *pEvent);
 
+/**
+ * Processes when a menu has been selected.
+ * @param menuChoice The menu selected.
+ */
 void MacLO_HandleMenuChoice(const int32_t menuChoice);
+
+/**
+ * Processes when an item was selected in the apple menu.
+ * @param item The item in the menu selected.
+ */
 void MacLO_HandleAppleMenuChoice(const int16_t item);
 
+/**
+ * Shows the about dialog.
+ */
 void MacLO_ShowAboutDialog();
+
+/**
+ * Launches the item selected in the apple menu.
+ * @param item The item in the menu selected.
+ */
 void MacLO_LaunchAppleMenuItem(const int16_t item);
 
+/**
+ * Processes when an item was selected in the game menu.
+ * @param item The item in the menu selected.
+ */
 void MacLO_HandleGameMenuChoice(const int16_t item);
 
+/**
+ * Quits the application.
+ */
 void MacLO_Quit();
 
 void MacLO_ToolBoxInit()

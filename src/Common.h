@@ -32,6 +32,6 @@
 #define bitToggle(value, bit) ((value) ^= (1UL << (bit)))
 
 /** Sets the bit within value to bitValue. */
-#define bitWrite(value, bit, bitValue) ((bitBalue) ? bitSet(value, bit) : bitClear(value, bit))
+#define bitWrite(value, bit, bitValue) ((bitValue) ? bitSet(value, bit) : bitClear(value, bit))
 
 #endif

@@ -1,6 +1,12 @@
 // Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
+/**
+ * @file GameWindow.c
+ *
+ * This file provides implementations for GameWindow.h.
+ */
+
 #include "GameWindow.h"
 #include "TitleScene.h"
 #include "LevelSelectScene.h"

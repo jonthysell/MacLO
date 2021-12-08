@@ -1,6 +1,12 @@
 // Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
+/**
+ * @file GameEngine.c
+ *
+ * This file provides implementations for GameEngine.h.
+ */
+
 #include "Common.h"
 #include "GameEngine.h"
 
@@ -12,8 +18,28 @@ const uint8_t MinHalfStars = 1;
 
 const uint16_t PerfectScore = 300; // LevelCount * MaxHalfStars
 
+/**
+ * Loads the given level as the current level.
+ * @param level The level.
+ * @param setB The set.
+ */
 void GameEngine_LoadLevel(GameEngine *pGameEngine, const int8_t level, const bool setB);
+
+/**
+ * Gets the number of half-stars to award given the par for the level, and the
+ * number of moves already taken.
+ * @param par The par for the level.
+ * @param moves The number of moves.
+ * @return The number of half-stars.
+ */
 uint8_t GameEngine_CalculateHalfStars(const uint16_t par, const uint16_t moves);
+
+/**
+ * Toggles the single light at the given coordinates.
+ * @param pGameEngine The GameEngine.
+ * @param x The x coordinate of the light.
+ * @param y The y coordinate of the light.
+ */
 void GameEngine_ToggleSingleLight(GameEngine *pGameEngine, const int8_t x, const int8_t y);
 
 void GameEngine_Init(GameEngine *pGameEngine)

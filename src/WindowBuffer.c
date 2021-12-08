@@ -1,6 +1,12 @@
 // Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
+/**
+ * @file WindowBuffer.c
+ *
+ * This file provides implementations for WindowBuffer.h.
+ */
+
 #include "WindowBuffer.h"
 #include "MacCommon.h"
 

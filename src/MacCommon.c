@@ -1,11 +1,21 @@
 // Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
+/**
+ * @file MacCommon.c
+ *
+ * This file provides implementations for MacCommon.h.
+ */
+
 #include "MacCommon.h"
 
+/** Resource ID for the error alert. */
 #define ErrorAlertResID  BaseResID
+
+/** Resource ID for the confirm alert. */
 #define ConfirmAlertResID (ErrorAlertResID + 1)
 
+/** Item ID for a Yes result from the confirm alert. */
 #define ConfirmYesResult 2
 
 void ShowError(Str255 message, bool isFatal)
