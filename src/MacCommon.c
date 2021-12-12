@@ -164,3 +164,28 @@ void DrawScaledPic(const PicHandle pic, const uint8_t scale)
     DrawPicture(pic, &destRect);
     MoveTo(destRect.right, destRect.top);
 }
+
+Handle GetOrAddResource(ResType resType, uint16_t resID, Size byteCount, Str255 resName)
+{
+    Handle result;
+    
+    result = GetResource(resType, resID);
+    
+    if (result != nil && GetHandleSize(result) != byteCount)
+    {
+        // Resource was the wrong size, delete it
+        RmveResource(result);
+        ReleaseResource(result);
+        result = nil;
+    }
+    
+    if (result == nil)
+    {
+        // Resource didn't exist, create it
+        result = NewHandleClear(byteCount);
+        HNoPurge(result);
+        AddResource(result, resType, resID, resName);
+    }
+    
+    return result;
+}

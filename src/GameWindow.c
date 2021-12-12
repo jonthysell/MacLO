@@ -34,6 +34,9 @@ void GameWindow_Init(GameWindow *pGameWindow)
     // Initialize game engine
     GameEngine_Init(&(pGameWindow->Engine));
     
+    // Initialize game save
+    GameSave_Init(&(pGameWindow->GameSave));
+    
     // Load PICT resources
     Bitmaps_Init(&(pGameWindow->Bitmaps));
     
@@ -43,6 +46,9 @@ void GameWindow_Init(GameWindow *pGameWindow)
     // Setup graphics before first draw
     SetPort(pGameWindow->Window);
     FillRect(&(pGameWindow->Window->portRect), WindowPattern);
+    
+    // Load data from saved game
+    GameSave_LoadData(&(pGameWindow->GameSave), &(pGameWindow->Engine));
     
     GameWindow_SetScene(pGameWindow, Title);
 }
@@ -144,6 +150,7 @@ void GameWindow_ClearScores(GameWindow *pGameWindow)
     if (ShowConfirm("\pAre you sure you want to clear all scores?"))
     {
         GameEngine_ResetGame(&(pGameWindow->Engine));
+        GameSave_SaveData(&(pGameWindow->GameSave), &(pGameWindow->Engine));
         GameWindow_SetScene(pGameWindow, Title);
     }
 }

@@ -10,10 +10,10 @@
 #include "Sounds.h"
 
 /** The first snd resource ID. */
-#define SndBaseResId  8192
+#define SndBaseResID  8192
 
 /** The click snd resource ID. */
-#define ClickSndResID SndBaseResId
+#define ClickSndResID SndBaseResID
 
 /** The retry snd resource ID. */
 #define RetrySndResID (ClickSndResID + 1)

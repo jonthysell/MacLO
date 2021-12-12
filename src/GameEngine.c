@@ -48,8 +48,7 @@ void GameEngine_Init(GameEngine *pGameEngine)
     
     for (level = 0; level < LevelCount; level++)
     {
-        // TODO: Load actual scores
-        pGameEngine->ScoresA[level] = 1;
+        pGameEngine->ScoresA[level] = 0;
         pGameEngine->ScoresB[level] = 0;
     }
     

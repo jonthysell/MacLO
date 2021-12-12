@@ -18,6 +18,9 @@
 /** The number of levels in each set. */
 #define LevelCount 50
 
+/** The number of sets. */
+#define SetCount   2
+
 /**
  * Gets the lights for a given set and level number.
  * @param level The level number.

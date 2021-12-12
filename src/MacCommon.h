@@ -122,4 +122,14 @@ void GetScaledPicFrame(const PicHandle picHandle, const uint8_t scale, Rect *pDe
  */
 void DrawScaledPic(const PicHandle pic, const uint8_t scale);
 
+/**
+ * Gets the specified resource or creates it if it doesn't exist.
+ * @param resType The resource type.
+ * @param resID The resource ID.
+ * @param byteCount The size of the resource if it needs to be created.
+ * @param resName The resource name if it needs to be created.
+ * @return Handle to the resource.
+ */
+Handle GetOrAddResource(ResType resType, uint16_t resID, Size byteCount, Str255 resName);
+
 #endif

@@ -218,6 +218,7 @@ void PlayScene_Click(GameWindow *pGameWindow, const Point *pPosition)
             // Level was completed in the last click
             GameEngine_CompleteLevel(&(pGameWindow->Engine));
             GameWindow_Draw(pGameWindow, false);
+            GameSave_SaveData(&(pGameWindow->GameSave), &(pGameWindow->Engine));
             GameWindow_SetScene(pGameWindow, LevelEnd);
             Sounds_PlayDoneSnd(&(pGameWindow->Sounds));
         }

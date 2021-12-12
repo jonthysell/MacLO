@@ -17,6 +17,7 @@
 #include "MacCommon.h"
 #include "WindowBuffer.h"
 #include "GameEngine.h"
+#include "GameSave.h"
 #include "Bitmaps.h"
 #include "Sounds.h"
 #include "Scenes.h"
@@ -30,6 +31,7 @@ typedef struct sGameWindow
     WindowPtr        Window;
     WindowBuffer     WindowBuffer;
     GameEngine       Engine;
+    GameSave         GameSave;
     Bitmaps          Bitmaps;
     Sounds           Sounds;
     SceneId          CurrentSceneId;

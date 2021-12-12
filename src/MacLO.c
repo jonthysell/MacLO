@@ -313,5 +313,6 @@ void MacLO_Quit()
     if (ShowConfirm("\pAre you sure you want to quit MacLO?"))
     {
         gExitApp = true;
+        GameSave_SaveData(&(gGameWindow.GameSave), &(gGameWindow.Engine));
     }
 }
