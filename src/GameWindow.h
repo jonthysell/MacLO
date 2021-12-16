@@ -76,6 +76,12 @@ void GameWindow_SetScene(GameWindow *pGameWindow, const SceneId sceneId);
 void GameWindow_Show(const GameWindow *pGameWindow);
 
 /**
+ * Toggles whether sound is enabled/disabled for the GameWindow.
+ * @param pGameWindow The GameWindow.
+ */
+void GameWindow_ToggleSound(GameWindow *pGameWindow);
+
+/**
  * Resets the level scores of the GameWindow.
  * @param pGameWindow The GameWindow.
  */

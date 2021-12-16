@@ -202,8 +202,10 @@ void LevelSelectScene_Click(GameWindow *pGameWindow, const Point *pPosition)
                 
                 if (PtInRect(*pPosition, &levelRect))
                 {
+                    // Clicked on level button
                     GameEngine_StartLevel(&(pGameWindow->Engine), level);
                     GameWindow_SetScene(pGameWindow, Play);
+                    Sounds_PlayRetrySnd(&(pGameWindow->Sounds));
                     break;
                 }
             }
@@ -211,6 +213,7 @@ void LevelSelectScene_Click(GameWindow *pGameWindow, const Point *pPosition)
     }
     else if (PtInRect(*pPosition, &(pGameWindow->LevelSelectScene.PrevButtonRect)))
     {
+        // Clicked on previous button, go to previous page or title scene
         if (pGameWindow->LevelSelectScene.PageNumber > 0)
         {
             pGameWindow->LevelSelectScene.PageNumber--;
@@ -223,6 +226,7 @@ void LevelSelectScene_Click(GameWindow *pGameWindow, const Point *pPosition)
     }
     else if (PtInRect(*pPosition, &(pGameWindow->LevelSelectScene.NextButtonRect)))
     {
+        // Clicked on next button, go to next page if possible
         if ((pGameWindow->LevelSelectScene.PageNumber + 1) * LevelsPerPage < LevelCount)
         {
             pGameWindow->LevelSelectScene.PageNumber++;

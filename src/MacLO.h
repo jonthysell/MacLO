@@ -25,4 +25,9 @@ void MacLO_AppInit();
  */
 void MacLO_MainLoop();
 
+/**
+ * Update menus of the application.
+ */
+void MacLO_UpdateMenus();
+
 #endif

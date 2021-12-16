@@ -7,32 +7,35 @@
  * This file provides implementations for MacLO.h.
  */
 
-#include "GameWindow.h"
 #include "MacLO.h"
+#include "GameWindow.h"
 
 /** Resource ID for the apple menu. */
-#define AppleMenuResID     BaseResID
+#define AppleMenuResID      BaseResID
 
-/** Resource ID for the about menu item. */
-#define AboutMenuItemID    1
+/** ID for the about menu item. */
+#define AboutMenuItemID     1
 
 /** Resource ID for the game menu. */
-#define GameMenuResID      BaseResID+1
+#define GameMenuResID       BaseResID+1
 
-/** Resource ID for the title menu id. */
-#define TitleMenuItemID    1
+/** ID for the title menu item. */
+#define GoToTitleMenuItemID 1
 
-/** Resource ID for the clear menu id. */
-#define ClearMenuItemID    2
+/** ID for the sound item. */
+#define SoundMenuItemID     2
 
-/** Resource ID for the quit menu id. */
-#define QuitMenuItemID     4
+/** ID for the clear menu item. */
+#define ClearMenuItemID     4
+
+/** ID for the quit menu item. */
+#define QuitMenuItemID      6
 
 /** Resource ID for the about dialog. */
-#define AboutDialogResID   BaseResID
+#define AboutDialogResID    BaseResID
 
 /** Resource ID for the about dialog's ok button. */
-#define AboutDialogOKID    1
+#define AboutDialogOKID     1
 
 /** GameWindow global instance. */
 GameWindow gGameWindow;
@@ -109,21 +112,39 @@ void MacLO_ToolBoxInit()
 void MacLO_AppInit()
 {
     Handle menuBar;
-    MenuHandle appleMenu;
+    MenuHandle appleMenu, gameMenu;
     
     // Add the menu bar
     menuBar = GetNewMBar(BaseResID);
+    if (menuBar == nil)
+    {
+        ShowError("\pMacLO MBAR resource missing!", true);
+    }
+    
     SetMenuBar(menuBar);
     
     // Populate the apple menu
     appleMenu = GetMHandle(AppleMenuResID);
+    if (appleMenu == nil)
+    {
+        ShowError("\pApple MENU resource missing!", true);
+    }
+    
     AddResMenu(appleMenu, 'DRVR');
     
-    DrawMenuBar();
+    gameMenu = GetMHandle(GameMenuResID);
+    if (gameMenu == nil)
+    {
+        ShowError("\pGame MENU resource missing!", true);
+    }
     
     // Setup the game window
     GameWindow_Init(&gGameWindow);
+    MacLO_UpdateMenus();
     GameWindow_Show(&gGameWindow);
+    
+    // Update menus now that the game window is ready
+    MacLO_UpdateMenus();
 }
 
 void MacLO_MainLoop()
@@ -152,12 +173,31 @@ void MacLO_MainLoop()
                     cmdChar = event.message & charCodeMask;
                     if ((event.modifiers & cmdKey) != 0)
                     {
-                        MacLO_HandleMenuChoice(MenuKey(cmdChar));
+                        if (cmdChar == 'Q' || cmdChar == 'q')
+                        {
+                            // Always handle quit properly, don't rely
+                            // on the quit menu existing or working properly
+                            MacLO_Quit();
+                        }
+                        else
+                        {
+                            // Try to invoke menu
+                            MacLO_HandleMenuChoice(MenuKey(cmdChar));
+                        }
                     }
                     break;
             }
         }
     }
+}
+
+void MacLO_UpdateMenus()
+{
+    MenuHandle gameMenu = GetMHandle(GameMenuResID);
+    
+    CheckItem(gameMenu, SoundMenuItemID, gGameWindow.Sounds.Enabled);
+    
+    DrawMenuBar();
 }
 
 void MacLO_HandleUpdate(const EventRecord *pEvent)
@@ -244,10 +284,6 @@ void MacLO_HandleMenuChoice(const int32_t menuChoice)
 
 void MacLO_HandleAppleMenuChoice(const int16_t item)
 {
-    MenuHandle appleMenu;
-    Str255 accName;
-    int16_t accNumber;
-    
     switch (item)
     {
         case AboutMenuItemID:
@@ -296,8 +332,11 @@ void MacLO_HandleGameMenuChoice(const int16_t item)
 {
     switch (item)
     {
-        case TitleMenuItemID:
+        case GoToTitleMenuItemID:
             GameWindow_SetScene(&gGameWindow, Title);
+            break;
+        case SoundMenuItemID:
+            GameWindow_ToggleSound(&gGameWindow);
             break;
         case ClearMenuItemID:
             GameWindow_ClearScores(&gGameWindow);

@@ -64,54 +64,83 @@ void LevelEndScene_Init(GameWindow *pGameWindow)
 void LevelEndScene_Draw(const GameWindow *pGameWindow, bool fullRefresh)
 {
     // Draw level
-    MoveTo(pGameWindow->LevelEndScene.LevelRect.left, pGameWindow->LevelEndScene.LevelRect.top);
-    if (pGameWindow->Engine.SetB)
+    if (fullRefresh)
     {
-        Bitmaps_DrawBChar(&(pGameWindow->Bitmaps), LevelTextScale);
+        MoveTo(pGameWindow->LevelEndScene.LevelRect.left, pGameWindow->LevelEndScene.LevelRect.top);
+        if (pGameWindow->Engine.SetB)
+        {
+            Bitmaps_DrawBChar(&(pGameWindow->Bitmaps), LevelTextScale);
+        }
+        else
+        {
+            Bitmaps_DrawAChar(&(pGameWindow->Bitmaps), LevelTextScale);
+        }
+        Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), 1 + pGameWindow->Engine.Level, LevelTextScale);
     }
-    else
-    {
-        Bitmaps_DrawAChar(&(pGameWindow->Bitmaps), LevelTextScale);
-    }
-    Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), 1 + pGameWindow->Engine.Level, LevelTextScale);
     
     // Draw half-stars
-    MoveTo(pGameWindow->LevelEndScene.HalfStarsRect.left, pGameWindow->LevelEndScene.HalfStarsRect.top);
-    Bitmaps_DrawHalfStars(&(pGameWindow->Bitmaps), GameEngine_GetHalfStars(&(pGameWindow->Engine)), MaxStars, HalfStarScale);
+    if (fullRefresh)
+    {
+        MoveTo(pGameWindow->LevelEndScene.HalfStarsRect.left, pGameWindow->LevelEndScene.HalfStarsRect.top);
+        Bitmaps_DrawHalfStars(&(pGameWindow->Bitmaps), GameEngine_GetHalfStars(&(pGameWindow->Engine)), MaxStars, HalfStarScale);
+    }
     
     // Draw score
-    MoveTo(pGameWindow->LevelEndScene.ScoreRect.left, pGameWindow->LevelEndScene.ScoreRect.top);
-    Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), GameEngine_GetTotalScore(&(pGameWindow->Engine)), ScoreTextScale);
-    Bitmaps_DrawSlashChar(&(pGameWindow->Bitmaps), ScoreTextScale);
-    Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), PerfectScore, ScoreTextScale);
+    if (fullRefresh)
+    {
+        MoveTo(pGameWindow->LevelEndScene.ScoreRect.left, pGameWindow->LevelEndScene.ScoreRect.top);
+        Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), GameEngine_GetTotalScore(&(pGameWindow->Engine)), ScoreTextScale);
+        Bitmaps_DrawSlashChar(&(pGameWindow->Bitmaps), ScoreTextScale);
+        Bitmaps_DrawNumber(&(pGameWindow->Bitmaps), PerfectScore, ScoreTextScale);
+    }
     
     // Draw retry button
-    DrawPicture(pGameWindow->Bitmaps.RetryButtonPict, &(pGameWindow->LevelEndScene.RetryButtonRect));
+    if (fullRefresh)
+    {
+        DrawPicture(pGameWindow->Bitmaps.RetryButtonPict, &(pGameWindow->LevelEndScene.RetryButtonRect));
+    
+    }
     
     // Draw next button
-    DrawPicture(pGameWindow->Bitmaps.NextButtonPict, &(pGameWindow->LevelEndScene.NextButtonRect));
+    if (fullRefresh)
+    {
+        DrawPicture(pGameWindow->Bitmaps.NextButtonPict, &(pGameWindow->LevelEndScene.NextButtonRect));
+    }
 }
 
 void LevelEndScene_Click(GameWindow *pGameWindow, const Point *pPosition)
 {
     if (PtInRect(*pPosition, &(pGameWindow->LevelEndScene.RetryButtonRect)))
     {
+        // Clicked on retry button
         GameEngine_ResetLevel(&(pGameWindow->Engine));
         GameWindow_SetScene(pGameWindow, Play);
         Sounds_PlayRetrySnd(&(pGameWindow->Sounds));
     }
     else if (PtInRect(*pPosition, &(pGameWindow->LevelEndScene.NextButtonRect)))
     {
-        GameEngine_NextLevel(&(pGameWindow->Engine));
-        
-        if (GameEngine_IsGameOver(&(pGameWindow->Engine)))
+        // Clicked on next button
+        if (GameEngine_IsLastLevel(&(pGameWindow->Engine)))
         {
+            // Finished the last level, go to game end scene
             GameWindow_SetScene(pGameWindow, GameEnd);
             Sounds_PlayDoneSnd(&(pGameWindow->Sounds));
         }
         else
         {
-            GameWindow_SetScene(pGameWindow, Play);
+            if (GameEngine_HasPlayedLevel(&(pGameWindow->Engine), pGameWindow->Engine.Level + 1))
+            {
+                // Next level has been played before, assume they're
+                // replaying old levels and return to level select scene
+                GameWindow_SetScene(pGameWindow, LevelSelect);
+            }
+            else
+            {
+                // First time for next level, load and go to play scene
+                GameEngine_NextLevel(&(pGameWindow->Engine));
+                GameWindow_SetScene(pGameWindow, Play);
+                Sounds_PlayRetrySnd(&(pGameWindow->Sounds));
+            }
         }
     }
 }

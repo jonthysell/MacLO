@@ -205,6 +205,7 @@ void PlayScene_Click(GameWindow *pGameWindow, const Point *pPosition)
                 
                 if (PtInRect(*pPosition, &lightRect))
                 {
+                    // Toggle clicked-on light
                     GameEngine_ToggleLights(&(pGameWindow->Engine), c, r);
                     GameWindow_Draw(pGameWindow, false);
                     Sounds_PlayClickSnd(&(pGameWindow->Sounds));
@@ -229,14 +230,15 @@ void PlayScene_Click(GameWindow *pGameWindow, const Point *pPosition)
         
         if (PtInRect(*pPosition, &(pGameWindow->PlayScene.RetryButtonRect)))
         {
+            // Click on retry button, reset level
             GameEngine_ResetLevel(&(pGameWindow->Engine));
             GameWindow_Draw(pGameWindow, false);
             Sounds_PlayRetrySnd(&(pGameWindow->Sounds));
         }
         else if (PtInRect(*pPosition, &(pGameWindow->PlayScene.SoundButtonRect)))
         {
-            pGameWindow->Sounds.Enabled = !pGameWindow->Sounds.Enabled;
-            GameWindow_Draw(pGameWindow, false);
+            // Click on sound button
+            GameWindow_ToggleSound(pGameWindow);
         }
     }
 }

@@ -13,13 +13,13 @@
 #define SndBaseResID  8192
 
 /** The click snd resource ID. */
-#define ClickSndResID SndBaseResID
+#define ClickSndResID   SndBaseResID
 
 /** The retry snd resource ID. */
-#define RetrySndResID (ClickSndResID + 1)
+#define RetrySndResID   (ClickSndResID + 1)
 
 /** The done snd resource ID. */
-#define DoneSndResID  (RetrySndResID + 1)
+#define DoneSndResID    (RetrySndResID + 1)
 
 /** Whether or not sound is enabled by default. */
 #define DefaultEnabled  true

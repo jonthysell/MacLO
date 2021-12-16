@@ -7,8 +7,8 @@
  * This file provides implementations for GameEngine.h.
  */
 
-#include "Common.h"
 #include "GameEngine.h"
+#include "Common.h"
 
 const int8_t PuzzleSize = 5;
 
@@ -62,22 +62,8 @@ void GameEngine_Init(GameEngine *pGameEngine)
 
 void GameEngine_NewGame(GameEngine *pGameEngine, const bool setB)
 {
-    int8_t level, startLevel;
-    
     pGameEngine->SetB = setB;
-    
-    startLevel = 0;
-    for (level = 0; level < LevelCount; level++)
-    {
-        // Find the first uncompleted level
-        if (GameEngine_GetScore(pGameEngine, level) == 0)
-        {
-            startLevel = level;
-            break;
-        }
-    }
-    
-    GameEngine_StartLevel(pGameEngine, startLevel);
+    GameEngine_StartLevel(pGameEngine, 0);
 }
 
 void GameEngine_ResetGame(GameEngine *pGameEngine)
@@ -115,7 +101,7 @@ void GameEngine_NextLevel(GameEngine *pGameEngine)
 {
     if (GameEngine_IsCompleted(pGameEngine))
     {
-        GameEngine_StartLevel(pGameEngine, pGameEngine->Level + 1);
+        GameEngine_StartLevel(pGameEngine, (pGameEngine->Level + 1) % LevelCount);
     }
 }
 
@@ -146,7 +132,7 @@ bool GameEngine_GetLight(const GameEngine *pGameEngine, const int8_t x, const in
 
 bool GameEngine_IsEnabled(const GameEngine *pGameEngine, const int8_t level)
 {
-    return level == 0 || (level < LevelCount && GameEngine_GetScore(pGameEngine, level - 1) > 0);
+    return level == 0 || (level < LevelCount && GameEngine_HasPlayedLevel(pGameEngine, level - 1));
 }
 
 bool GameEngine_IsCompleted(const GameEngine *pGameEngine)
@@ -154,9 +140,14 @@ bool GameEngine_IsCompleted(const GameEngine *pGameEngine)
     return pGameEngine->Lights == 0;
 }
 
-bool GameEngine_IsGameOver(const GameEngine *pGameEngine)
+bool GameEngine_IsLastLevel(const GameEngine *pGameEngine)
 {
-    return pGameEngine->Level >= LevelCount;
+    return pGameEngine->Level == LevelCount - 1;
+}
+
+bool GameEngine_HasPlayedLevel(const GameEngine *pGameEngine, const int8_t level)
+{
+    return GameEngine_GetScore(pGameEngine, level) > 0;
 }
 
 uint8_t GameEngine_GetHalfStars(const GameEngine *pGameEngine)

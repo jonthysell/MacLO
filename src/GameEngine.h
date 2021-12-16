@@ -110,11 +110,19 @@ bool GameEngine_IsCompleted(const GameEngine *pGameEngine);
 bool GameEngine_IsEnabled(const GameEngine *pGameEngine, const int8_t level);
 
 /**
- * Gets whether or not the last level has just been completed.
+ * Gets whether the current level is the last of a set.
  * @param pGameEngine The GameEngine.
- * @return Whether or not the game is over.
+ * @return Whether the current level is the last of a set.
  */
-bool GameEngine_IsGameOver(const GameEngine *pGameEngine);
+bool GameEngine_IsLastLevel(const GameEngine *pGameEngine);
+
+/**
+ * Gets whether the given level has been completed before.
+ * @param pGameEngine The GameEngine.
+ * @param level The level.
+ * @return Whether the given level has been completed before.
+ */
+bool GameEngine_HasPlayedLevel(const GameEngine *pGameEngine, const int8_t level);
 
 /**
  * Gets the number of half-stars the user stands to earn given the current

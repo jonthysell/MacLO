@@ -7,7 +7,6 @@
  * This file provides implementations for Levels.h.
  */
 
-#include "Common.h"
 #include "Levels.h"
 
 /** The levels from Set A, stored in 32-bit integers. */

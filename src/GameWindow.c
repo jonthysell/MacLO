@@ -8,6 +8,7 @@
  */
 
 #include "GameWindow.h"
+#include "MacLO.h"
 #include "TitleScene.h"
 #include "LevelSelectScene.h"
 #include "PlayScene.h"
@@ -143,6 +144,13 @@ void GameWindow_SetScene(GameWindow *pGameWindow, const SceneId sceneId)
 void GameWindow_Show(const GameWindow *pGameWindow)
 {
     ShowWindow(pGameWindow->Window);
+}
+
+void GameWindow_ToggleSound(GameWindow *pGameWindow)
+{
+    pGameWindow->Sounds.Enabled = !pGameWindow->Sounds.Enabled;
+    MacLO_UpdateMenus();
+    GameWindow_Draw(pGameWindow, false);
 }
 
 void GameWindow_ClearScores(GameWindow *pGameWindow)
