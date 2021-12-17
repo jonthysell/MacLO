@@ -4,7 +4,7 @@
 
 MacLO is a clone of the puzzle game [Lights Out](https://en.wikipedia.org/wiki/Lights_Out_(game)) for the 68k Macintosh. It is a port of [ArduLO](https://github.com/jonthysell/ArduLO) for the Arduboy.
 
-MacLO is B&W and has been tested on System 6.0.8 and System 7.5.5.
+MacLO is B&W and 32-bit clean. It requires at least a Mac Plus running System 6.0.8, but will also work on newer machines up to Mac OS 9.2.2.
 
 ## Build ##
 
@@ -22,7 +22,7 @@ The objective is to turn off all of the lights in as few moves as possible. Clic
 
 ![MacLO Level Done Screenshot](./.github/screenshots/leveldone.gif)
 
-After finshing a puzzle, you'll be given a score in one to three stars. Here you can either move on to the next puzzle or retry for a better score. Try to get three stars on all 50 levels in the set!
+After finshing a puzzle, you'll be given a score in one to three stars. Here you can either move on to the next puzzle or retry for a better score. Try to get three stars on all 50 levels in each set!
 
 ## Errata ##
 
